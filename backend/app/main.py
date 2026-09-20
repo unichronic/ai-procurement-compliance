@@ -23,6 +23,7 @@ from app.core.explain import ExplanationGenerator
 from app.core.lint import SpecLinter
 from app.core.documents import UnsupportedDocument, extract_text
 from app.core.limits import MAX_DOCUMENT_CHARS, MAX_QUERY_CHARS, RateLimiter
+from app.core.rerank import RERANK_CANDIDATES, CrossEncoderReranker
 
 load_dotenv()
 
@@ -55,6 +56,9 @@ async def lifespan(app: FastAPI):
     _state["versions"] = VersionResolver(standards)
     _state["certification"] = CertificationAdvisor(standards, qco_orders)
     _state["explainer"] = ExplanationGenerator()
+    _state["reranker"] = CrossEncoderReranker(
+        enabled=os.environ.get("ENABLE_RERANK", "1") != "0"
+    )
     _state["linter"] = SpecLinter(
         standards=standards,
         index=index,
@@ -140,6 +144,21 @@ def _confidence_band(semantic_similarity: float, data_confidence: str = "high") 
     return band
 
 
+def _search(query: str, top_k: int, rerank: bool = True) -> List[Dict[str, Any]]:
+    """Retrieve, then optionally fuse a cross-encoder reranking over the result.
+
+    When reranking is on, the first stage retrieves deeper than requested so the
+    reranker has candidates to work with -- it can only reorder what retrieval
+    already found.
+    """
+    reranker = _state.get("reranker")
+    if not (rerank and reranker and reranker.available):
+        return _state["index"].search(query, top_k=top_k)
+
+    hits = _state["index"].search(query, top_k=max(top_k, RERANK_CANDIDATES))
+    return reranker.rerank(query, hits, top_k=top_k)
+
+
 def _build_recommendation(hit: Dict[str, Any]) -> Dict[str, Any]:
     s = hit["standard"]
     sid = s["id"]
@@ -174,11 +193,13 @@ def _build_recommendation(hit: Dict[str, Any]) -> Dict[str, Any]:
 class RecommendRequest(BaseModel):
     text: str
     top_k: int = 5
+    rerank: bool = True
 
 
 class BatchRequest(BaseModel):
     document_text: str
     top_k_per_item: int = 3
+    rerank: bool = True
 
 
 class LintRequest(BaseModel):
@@ -219,7 +240,7 @@ def recommend(req: RecommendRequest):
             413, f"text exceeds {MAX_QUERY_CHARS} characters; use /batch or /lint "
                  f"for whole documents")
 
-    hits = _state["index"].search(req.text, top_k=req.top_k)
+    hits = _search(req.text, top_k=req.top_k, rerank=req.rerank)
     recommendations = [_build_recommendation(h) for h in hits]
 
     return {
@@ -239,7 +260,7 @@ def batch_recommend(req: BatchRequest):
 
     results = []
     for idx, line in enumerate(items):
-        hits = _state["index"].search(line, top_k=req.top_k_per_item)
+        hits = _search(line, top_k=req.top_k_per_item, rerank=req.rerank)
         results.append({
             "item_index": idx,
             "line": line,

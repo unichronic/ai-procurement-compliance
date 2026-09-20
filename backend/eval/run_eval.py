@@ -18,6 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.core.retrieval import StandardsIndex
+from app.core.rerank import RERANK_CANDIDATES, CrossEncoderReranker
 
 GOLD_PATH = Path(__file__).parent / "gold_queries.jsonl"
 HELDOUT_PATH = Path(__file__).parent / "heldout_queries.jsonl"
@@ -30,12 +31,17 @@ def load_gold(path: Path = GOLD_PATH):
         return [json.loads(line) for line in fh if line.strip()]
 
 
-def evaluate(index: StandardsIndex, gold):
+def evaluate(index: StandardsIndex, gold, reranker=None):
     per_type = defaultdict(list)
     rows = []
 
     for case in gold:
-        hits = index.search(case["query"], top_k=max(K_VALUES))
+        if reranker is not None:
+            # Retrieve deeper, then let the cross-encoder reorder.
+            hits = index.search(case["query"], top_k=RERANK_CANDIDATES)
+            hits = reranker.rerank(case["query"], hits, top_k=max(K_VALUES))
+        else:
+            hits = index.search(case["query"], top_k=max(K_VALUES))
         ranked_ids = [h["standard"]["id"] for h in hits]
         expected = set(case["expected_ids"])
 
@@ -76,6 +82,8 @@ def main():
                         help="use the held-out set (queries written to avoid every alias "
                              "string, so it measures generalisation rather than lexicon recall)")
     parser.add_argument("--gold", help="path to a custom gold set")
+    parser.add_argument("--rerank", action="store_true",
+                        help="apply cross-encoder reranking over the RRF candidates")
     args = parser.parse_args()
 
     gold_path = Path(args.gold) if args.gold else (HELDOUT_PATH if args.heldout else GOLD_PATH)
@@ -84,8 +92,15 @@ def main():
     index = StandardsIndex(standards)
     index.build()
 
+    reranker = None
+    if args.rerank:
+        reranker = CrossEncoderReranker()
+        if not reranker.available:
+            print("WARNING: cross-encoder unavailable; running without reranking")
+            reranker = None
+
     gold = load_gold(gold_path)
-    rows, per_type = evaluate(index, gold)
+    rows, per_type = evaluate(index, gold, reranker=reranker)
 
     overall = summarize(rows)
     print(f"\nCorpus: {len(standards)} standards | Queries: {overall['n']} "
