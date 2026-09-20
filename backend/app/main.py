@@ -27,7 +27,10 @@ from app.core.limits import MAX_DOCUMENT_CHARS, MAX_QUERY_CHARS, RateLimiter
 load_dotenv()
 
 DATA_DIR = Path(__file__).parent / "data"
-FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+# This backend's own demo UI. The repo's `frontend/` holds the team's React app,
+# which is a separate build with its own toolchain; keeping this one here means
+# `uvicorn app.main:app` alone still serves a working interface with no npm step.
+FRONTEND_DIR = Path(__file__).parent / "static"
 
 _state: Dict[str, Any] = {}
 

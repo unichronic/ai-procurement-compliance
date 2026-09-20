@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Indian Standards Recommendation Engine</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <h1>Indian Standards Recommendation Engine</h1>
+  <p>SIH 2026 · Problem Statement 108 · Bureau of Indian Standards — paste a product description, spec, or tender document and get ranked applicable IS standards, allied standards, version status, and certification requirements. Retrieval runs entirely on this machine; nothing you type here is sent to any external API.</p>
+</header>
+<main>
+  <div class="mode-toggle">
+    <button id="mode-single" class="active">Single query</button>
+    <button id="mode-batch">Tender document (batch)</button>
+    <button id="mode-lint">Audit a draft</button>
+  </div>
+
+  <textarea id="query-text" placeholder="e.g. supply of galvanized structural steel sections for building frame, IS grade Fe 500"></textarea>
+
+  <div class="controls">
+    <label for="top-k" id="top-k-label">Results per item</label>
+    <input type="number" id="top-k" value="5" min="1" max="15" />
+    <button id="submit-btn" class="primary">Find applicable standards</button>
+    <button id="sample-btn" class="secondary">Load sample draft</button>
+    <button id="upload-btn" class="secondary">Upload PDF/DOCX…</button>
+    <input type="file" id="file-input" accept=".pdf,.docx,.txt,.md" hidden />
+  </div>
+
+  <div id="status" class="status"></div>
+  <div id="results"></div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
