@@ -1,0 +1,51 @@
+{"query": "hot rolled medium and high tensile structural steel specification", "expected_ids": ["IS_2062_2011"], "query_type": "formal_title"}
+{"query": "plain and reinforced concrete code of practice", "expected_ids": ["IS_456_2000"], "query_type": "formal_title"}
+{"query": "drinking water specification", "expected_ids": ["IS_10500_2012"], "query_type": "formal_title"}
+{"query": "safety of toys mechanical and physical properties", "expected_ids": ["IS_9873_1_2019"], "query_type": "formal_title"}
+{"query": "protective helmets for two-wheeler users", "expected_ids": ["IS_4151_2015"], "query_type": "formal_title"}
+{"query": "energy efficient induction motors three phase squirrel cage", "expected_ids": ["IS_12615_2018"], "query_type": "formal_title"}
+{"query": "methods of tensile testing of metallic materials at ambient temperature", "expected_ids": ["IS_1608_2005"], "query_type": "formal_title"}
+{"query": "coarse and fine aggregate for concrete specification", "expected_ids": ["IS_383_2016"], "query_type": "formal_title"}
+{"query": "grading and fineness of gold and gold alloys", "expected_ids": ["IS_1417_2016"], "query_type": "formal_title"}
+{"query": "cross-linked polyethylene insulated PVC sheathed cables", "expected_ids": ["IS_7098_1_2003"], "query_type": "formal_title"}
+{"query": "XLPE cable", "expected_ids": ["IS_7098_1_2003"], "query_type": "trade_name"}
+{"query": "MS plate", "expected_ids": ["IS_2062_2011"], "query_type": "trade_name"}
+{"query": "bike helmet ISI marked", "expected_ids": ["IS_4151_2015"], "query_type": "trade_name"}
+{"query": "hard hat for construction workers", "expected_ids": ["IS_2925_1984"], "query_type": "trade_name"}
+{"query": "mineral water bottles", "expected_ids": ["IS_14543_2021"], "query_type": "trade_name"}
+{"query": "cooking gas cylinder", "expected_ids": ["IS_4038_1986"], "query_type": "trade_name"}
+{"query": "gas cylinder valve", "expected_ids": ["IS_3196_1_1991"], "query_type": "trade_name"}
+{"query": "LED bulb", "expected_ids": ["IS_15885_2_1_2018", "IS_16102_1_2012"], "query_type": "trade_name"}
+{"query": "maida flour", "expected_ids": ["IS_7463_1974"], "query_type": "trade_name"}
+{"query": "gold jewellery purity marking", "expected_ids": ["IS_1417_2016"], "query_type": "trade_name"}
+{"query": "silver jewellery hallmarking", "expected_ids": ["IS_2112_2025"], "query_type": "trade_name"}
+{"query": "crushed stone and sand for concrete mix", "expected_ids": ["IS_383_2016"], "query_type": "trade_name"}
+{"query": "squirrel cage motor", "expected_ids": ["IS_12615_2018", "IS_325_1978"], "query_type": "trade_name"}
+{"query": "laptop safety certification", "expected_ids": ["IS_13252_1_2010"], "query_type": "trade_name"}
+{"query": "पीने के पानी के लिए मानक", "expected_ids": ["IS_10500_2012"], "query_type": "hindi"}
+{"query": "दोपहिया वाहन चालकों के लिए हेलमेट", "expected_ids": ["IS_4151_2015"], "query_type": "hindi"}
+{"query": "एलपीजी गैस सिलेंडर", "expected_ids": ["IS_4038_1986"], "query_type": "hindi"}
+{"query": "सोने के आभूषण की शुद्धता", "expected_ids": ["IS_1417_2016"], "query_type": "hindi"}
+{"query": "खिलौनों की सुरक्षा", "expected_ids": ["IS_9873_1_2019"], "query_type": "hindi"}
+{"query": "निर्माण के लिए स्ट्रक्चरल स्टील", "expected_ids": ["IS_2062_2011"], "query_type": "hindi"}
+{"query": "बिस्कुट के लिए विशिष्टि", "expected_ids": ["IS_1011_2002"], "query_type": "hindi"}
+{"query": "बिजली के तार और केबल", "expected_ids": ["IS_7098_1_2003"], "query_type": "hindi"}
+{"query": "helmet ka ISI standard kya hai", "expected_ids": ["IS_4151_2015"], "query_type": "code_mixed"}
+{"query": "peene ka paani quality standard", "expected_ids": ["IS_10500_2012"], "query_type": "code_mixed"}
+{"query": "gas cylinder ka standard", "expected_ids": ["IS_4038_1986"], "query_type": "code_mixed"}
+{"query": "sone ke gehne hallmark", "expected_ids": ["IS_1417_2016"], "query_type": "code_mixed"}
+{"query": "LED bulb ka IS code", "expected_ids": ["IS_15885_2_1_2018", "IS_16102_1_2012"], "query_type": "code_mixed"}
+{"query": "khilona safety standard", "expected_ids": ["IS_9873_1_2019"], "query_type": "code_mixed"}
+{"query": "IE3 efficiency class motor", "expected_ids": ["IS_12615_2018"], "query_type": "parametric"}
+{"query": "M25 grade concrete design", "expected_ids": ["IS_456_2000"], "query_type": "parametric"}
+{"query": "E250 grade steel", "expected_ids": ["IS_2062_2011"], "query_type": "parametric"}
+{"query": "22 carat gold 916 hallmark", "expected_ids": ["IS_1417_2016"], "query_type": "parametric"}
+{"query": "1.1 kV XLPE insulated cable", "expected_ids": ["IS_7098_1_2003"], "query_type": "parametric"}
+{"query": "14.2 kg domestic LPG cylinder", "expected_ids": ["IS_4038_1986"], "query_type": "parametric"}
+{"query": "20 mm coarse aggregate", "expected_ids": ["IS_383_2016"], "query_type": "parametric"}
+{"query": "Supply and installation of 1.1 kV XLPE insulated armoured power cable, 3 core, conforming to relevant IS", "expected_ids": ["IS_7098_1_2003"], "query_type": "tender_line"}
+{"query": "Procurement of ISI marked protective helmets for departmental two-wheeler riders, 200 nos.", "expected_ids": ["IS_4151_2015"], "query_type": "tender_line"}
+{"query": "Supply of hot rolled MS structural steel sections (angles, channels) for workshop shed fabrication", "expected_ids": ["IS_2062_2011"], "query_type": "tender_line"}
+{"query": "Supply of packaged natural mineral water bottles 1 litre, 500 cartons", "expected_ids": ["IS_14543_2021"], "query_type": "tender_line"}
+{"query": "Annual rate contract for domestic LPG cylinders of 14.2 kg capacity", "expected_ids": ["IS_4038_1986"], "query_type": "tender_line"}
+{"query": "Supply of energy efficient three phase squirrel cage induction motors, IE3 class, 7.5 kW", "expected_ids": ["IS_12615_2018"], "query_type": "tender_line"}

@@ -1,0 +1,1255 @@
+{
+  "_meta": {
+    "note": "DEMO SEED DATASET. BIS does not expose full standard text via any free/open bulk channel (the 'free' download scheme wraps PDFs in FileOpen DRM that blocks extraction), so this dataset is built from publicly known titles/scopes/committee metadata, not scraped full text. data_confidence flags which entries are well-established public knowledge ('high') vs illustrative/approximate ('medium') -- a real deployment would replace this file with a scraped+cross-checked feed from standards.bis.gov.in (Know Your Standard) and Manak Online, and should NEVER present 'medium' confidence entries to a user without a verification flag, matching the failure mode of the BIS-Standards-AI-Assistant dataset repo (8/22 hand-curated entries later found wrong).",
+    "schema_version": "1.0",
+    "count_placeholder": "see standards array"
+  },
+  "standards": [
+    {
+      "id": "IS_1011_2002",
+      "number": "IS 1011",
+      "edition_year": 2002,
+      "title": "Biscuits — Specification",
+      "scope": "Prescribes requirements for ingredients, quality, chemical parameters, and packing of biscuits intended for direct human consumption.",
+      "committee": "FAD 15",
+      "department": "Food and Agriculture",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2010-03",
+          "summary": "Revised permissible limits for moisture content and rancidity."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_7463_1974",
+          "type": "normative_reference",
+          "note": "Maida (refined wheat flour), the primary ingredient, must itself conform to IS 7463."
+        },
+        {
+          "id": "IS_1163_1990",
+          "type": "test_method",
+          "note": "Sampling and analytical test methods for finished biscuits."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_BISCUITS_2021",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "biscuit",
+        "biscuits",
+        "cookies",
+        "bakery biscuit"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_7463_1974",
+      "number": "IS 7463",
+      "edition_year": 1974,
+      "title": "Maida (Refined Wheat Flour) — Specification",
+      "scope": "Prescribes requirements for refined wheat flour (maida) used as a raw material in bakery and confectionery products.",
+      "committee": "FAD 15",
+      "department": "Food and Agriculture",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_1163_1990",
+          "type": "test_method",
+          "note": "Shared sampling/testing methodology family for cereal-based products."
+        }
+      ],
+      "qco": null,
+      "data_confidence": "high",
+      "aliases": [
+        "maida",
+        "refined wheat flour",
+        "white flour",
+        "atta maida"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_1163_1990",
+      "number": "IS 1163",
+      "edition_year": 1990,
+      "title": "Methods of Sampling and Test for Bakery Products",
+      "scope": "Specifies sampling procedures and chemical/physical test methods applicable to bakery products including biscuits and flour-based goods.",
+      "committee": "FAD 15",
+      "department": "Food and Agriculture",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "bakery product testing",
+        "biscuit testing",
+        "bakery sampling"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_325_1978",
+      "number": "IS 325",
+      "edition_year": 1978,
+      "title": "Three-Phase Induction Motors — Specification",
+      "scope": "Prescribes ratings, performance, and testing requirements for three-phase squirrel-cage induction motors.",
+      "committee": "ETD 15",
+      "department": "Electrotechnical",
+      "status": "withdrawn",
+      "superseded_by": [
+        "IS_12615_2018",
+        "IS_60034_1_2004"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "high",
+      "aliases": [
+        "induction motor",
+        "three phase motor",
+        "squirrel cage motor",
+        "electric motor"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_12615_2018",
+      "number": "IS 12615",
+      "edition_year": 2018,
+      "title": "Energy Efficient Induction Motors — Three Phase Squirrel Cage — Specification",
+      "scope": "Prescribes efficiency classes (IE1-IE4), performance, and marking requirements for energy-efficient three-phase induction motors, superseding the ratings framework of IS 325.",
+      "committee": "ETD 15",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_325_1978"
+      ],
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2021-07",
+          "summary": "Aligned IE efficiency classes with IEC 60034-30-1."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_60034_1_2004",
+          "type": "normative_reference",
+          "note": "General requirements for rotating electrical machines referenced for baseline test methods."
+        },
+        {
+          "id": "IS_325_1978",
+          "type": "related_product",
+          "note": "Legacy standard this specification supersedes; cited here only for historical cross-reference."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_ELECTRIC_MOTORS_2022",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "energy efficient motor",
+        "premium efficiency motor",
+        "squirrel cage motor",
+        "electric motor"
+      ],
+      "designations": [
+        "IE1",
+        "IE2",
+        "IE3",
+        "IE4"
+      ]
+    },
+    {
+      "id": "IS_60034_1_2004",
+      "number": "IS/IEC 60034-1",
+      "edition_year": 2004,
+      "title": "Rotating Electrical Machines, Part 1: Rating and Performance",
+      "scope": "General requirements, rating, and performance test methods for rotating electrical machines, adopted from IEC 60034-1.",
+      "committee": "ETD 15",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_4029_1967",
+          "type": "installation",
+          "note": "Guide for testing induction motors installed in the field."
+        }
+      ],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "motor rating",
+        "rotating machine performance",
+        "motor nameplate"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_4029_1967",
+      "number": "IS 4029",
+      "edition_year": 1967,
+      "title": "Guide for Testing Three-Phase Induction Motors",
+      "scope": "Provides guidance on field and factory acceptance testing of installed induction motors.",
+      "committee": "ETD 15",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "motor testing",
+        "induction motor test",
+        "motor test guide"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_456_2000",
+      "number": "IS 456",
+      "edition_year": 2000,
+      "title": "Plain and Reinforced Concrete — Code of Practice",
+      "scope": "Covers general structural design and workmanship requirements for plain and reinforced concrete construction.",
+      "committee": "CED 2",
+      "department": "Civil Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2003-01",
+          "summary": "Minor corrections to durability clauses."
+        },
+        {
+          "no": 2,
+          "date": "2005-11",
+          "summary": "Revised clauses on fire resistance."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_383_2016",
+          "type": "normative_reference",
+          "note": "Aggregate used in concrete mix must conform to IS 383."
+        },
+        {
+          "id": "IS_875_3_2015",
+          "type": "safety",
+          "note": "Wind load provisions referenced for structural safety design."
+        }
+      ],
+      "qco": null,
+      "data_confidence": "high",
+      "aliases": [
+        "RCC code",
+        "reinforced concrete code",
+        "concrete code of practice",
+        "RCC design"
+      ],
+      "designations": [
+        "M15",
+        "M20",
+        "M25",
+        "M30",
+        "M35",
+        "M40"
+      ]
+    },
+    {
+      "id": "IS_383_2016",
+      "number": "IS 383",
+      "edition_year": 2016,
+      "title": "Coarse and Fine Aggregate for Concrete — Specification",
+      "scope": "Prescribes grading, physical, and quality requirements for aggregates used in concrete.",
+      "committee": "CED 2",
+      "department": "Civil Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_383_1970"
+      ],
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "high",
+      "aliases": [
+        "aggregate",
+        "coarse aggregate",
+        "fine aggregate",
+        "sand for concrete",
+        "crushed stone",
+        "stone chips",
+        "grit",
+        "baalu",
+        "reta"
+      ],
+      "designations": [
+        "20 mm",
+        "10 mm",
+        "40 mm"
+      ]
+    },
+    {
+      "id": "IS_383_1970",
+      "number": "IS 383",
+      "edition_year": 1970,
+      "title": "Coarse and Fine Aggregate from Natural Sources for Concrete — Specification",
+      "scope": "Earlier edition covering aggregate requirements for concrete; revised and reissued as IS 383:2016.",
+      "committee": "CED 2",
+      "department": "Civil Engineering",
+      "status": "superseded",
+      "superseded_by": [
+        "IS_383_2016"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "high",
+      "aliases": [
+        "aggregate",
+        "coarse aggregate",
+        "fine aggregate",
+        "sand for concrete",
+        "crushed stone"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_875_3_2015",
+      "number": "IS 875 (Part 3)",
+      "edition_year": 2015,
+      "title": "Design Loads for Buildings and Structures, Part 3: Wind Loads",
+      "scope": "Specifies wind load calculation provisions for structural design of buildings and structures.",
+      "committee": "CED 37",
+      "department": "Civil Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "wind load",
+        "wind pressure",
+        "design wind speed"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_2062_2011",
+      "number": "IS 2062",
+      "edition_year": 2011,
+      "title": "Hot Rolled Medium and High Tensile Structural Steel — Specification",
+      "scope": "Prescribes chemical composition, mechanical properties, and dimensional tolerances for structural steel used in construction and fabrication.",
+      "committee": "MTD 4",
+      "department": "Metallurgical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_2062_2006"
+      ],
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_1608_2005",
+          "type": "test_method",
+          "note": "Tensile testing method referenced for mechanical property verification."
+        },
+        {
+          "id": "IS_800_2007",
+          "type": "installation",
+          "note": "Referenced for design/fabrication use of the steel grade in general construction."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_STEEL_2021",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "MS plate",
+        "mild steel plate",
+        "structural steel",
+        "MS angle",
+        "MS channel",
+        "MS beam",
+        "steel sections",
+        "steel plate",
+        "loha",
+        "TISCON plate"
+      ],
+      "designations": [
+        "E250",
+        "E275",
+        "E300",
+        "E350",
+        "E410",
+        "E450",
+        "Fe 410",
+        "Fe 490"
+      ]
+    },
+    {
+      "id": "IS_2062_2006",
+      "number": "IS 2062",
+      "edition_year": 2006,
+      "title": "Hot Rolled Low, Medium and High Tensile Structural Steel — Specification",
+      "scope": "Earlier edition of structural steel specification, revised and reissued as IS 2062:2011.",
+      "committee": "MTD 4",
+      "department": "Metallurgical Engineering",
+      "status": "superseded",
+      "superseded_by": [
+        "IS_2062_2011"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "MS plate",
+        "mild steel plate",
+        "structural steel",
+        "MS angle",
+        "steel sections"
+      ],
+      "designations": [
+        "Fe 410"
+      ]
+    },
+    {
+      "id": "IS_1608_2005",
+      "number": "IS 1608",
+      "edition_year": 2005,
+      "title": "Metallic Materials — Tensile Testing at Ambient Temperature",
+      "scope": "Specifies the method for tensile testing of metallic materials at room temperature.",
+      "committee": "MTD 2",
+      "department": "Metallurgical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "tensile test",
+        "tensile testing",
+        "UTM test",
+        "elongation test"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_800_2007",
+      "number": "IS 800",
+      "edition_year": 2007,
+      "title": "General Construction in Steel — Code of Practice",
+      "scope": "Covers design, fabrication, and erection of general steel construction.",
+      "committee": "CED 7",
+      "department": "Civil Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "steel structure design",
+        "structural steel code",
+        "steel design code"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_302_1_2008",
+      "number": "IS 302 (Part 1)",
+      "edition_year": 2008,
+      "title": "Safety of Household and Similar Electrical Appliances, Part 1: General Requirements",
+      "scope": "General safety requirements applicable to household and similar electrical appliances.",
+      "committee": "ETD 32",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2016-05",
+          "summary": "Updated insulation and leakage-current requirements."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_302_2_1_2010",
+          "type": "related_product",
+          "note": "Particular requirements for a specific appliance category built on the Part-1 general requirements."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_HOUSEHOLD_ELEC_2020",
+        "scheme": "CRS"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "household appliance safety",
+        "home appliance safety",
+        "domestic appliance"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_302_2_1_2010",
+      "number": "IS 302 (Part 2/Sec 1)",
+      "edition_year": 2010,
+      "title": "Safety of Household Electrical Appliances, Part 2 Section 1: Particular Requirements for Electric Irons",
+      "scope": "Particular safety requirements for electric irons, applied together with IS 302 (Part 1).",
+      "committee": "ETD 32",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_302_1_2008",
+          "type": "normative_reference",
+          "note": "Must be read together with the Part-1 general requirements."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_HOUSEHOLD_ELEC_2020",
+        "scheme": "CRS"
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "electric iron",
+        "press iron",
+        "clothes iron",
+        "istri"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_13252_1_2010",
+      "number": "IS 13252 (Part 1)",
+      "edition_year": 2010,
+      "title": "Information Technology Equipment — Safety, Part 1: General Requirements",
+      "scope": "General safety requirements for information technology equipment including computers and peripherals.",
+      "committee": "LITD 8",
+      "department": "Electronics and Information Technology",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_15885_2_1_2018",
+          "type": "related_product",
+          "note": "Companion product-safety standard for LED lighting equipment under the same electronics QCO regime."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_ELECTRONICS_IT_2012",
+        "scheme": "CRS"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "laptop",
+        "computer safety",
+        "IT equipment safety",
+        "desktop computer",
+        "printer safety"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_15885_2_1_2018",
+      "number": "IS 15885 (Part 2/Sec 1)",
+      "edition_year": 2018,
+      "title": "Self-Ballasted LED Lamps for General Lighting Services — Safety Specification",
+      "scope": "Safety requirements for self-ballasted LED lamps intended for general household lighting.",
+      "committee": "LITD 26",
+      "department": "Electronics and Information Technology",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_16102_1_2012",
+          "type": "test_method",
+          "note": "Performance test methods for self-ballasted LED lamps."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_ELECTRONICS_IT_2012",
+        "scheme": "CRS"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "LED bulb",
+        "LED lamp",
+        "led light",
+        "bulb safety",
+        "LED bulb safety"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_16102_1_2012",
+      "number": "IS 16102 (Part 1)",
+      "edition_year": 2012,
+      "title": "Self-Ballasted LED Lamps, Part 1: Performance Requirements",
+      "scope": "Performance test methods and requirements for self-ballasted LED lamps.",
+      "committee": "LITD 26",
+      "department": "Electronics and Information Technology",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "LED bulb performance",
+        "LED lamp performance",
+        "LED bulb",
+        "lumen output"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_4038_1986",
+      "number": "IS 4038",
+      "edition_year": 1986,
+      "title": "LPG Cylinders for Domestic and Commercial Use — Specification",
+      "scope": "Prescribes design, material, and testing requirements for liquefied petroleum gas cylinders.",
+      "committee": "CHD 20",
+      "department": "Chemical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2015-02",
+          "summary": "Updated valve fitting and pressure test requirements."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_8737_1978",
+          "type": "installation",
+          "note": "Installation and periodic inspection requirements for LPG cylinders in use."
+        },
+        {
+          "id": "IS_3196_1_1991",
+          "type": "related_product",
+          "note": "Applies to LPG cylinder valves used with this cylinder type."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_LPG_CYLINDERS_2019",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "LPG cylinder",
+        "gas cylinder",
+        "cooking gas cylinder",
+        "domestic cylinder",
+        "gas silinder",
+        "rasoi gas cylinder"
+      ],
+      "designations": [
+        "14.2 kg",
+        "5 kg",
+        "19 kg",
+        "47.5 kg"
+      ]
+    },
+    {
+      "id": "IS_8737_1978",
+      "number": "IS 8737",
+      "edition_year": 1978,
+      "title": "Periodic Inspection and Testing of LPG Cylinders in Service",
+      "scope": "Guidance on inspection intervals and testing procedures for LPG cylinders already in service.",
+      "committee": "CHD 20",
+      "department": "Chemical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "cylinder retesting",
+        "LPG cylinder inspection",
+        "cylinder periodic testing"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_3196_1_1991",
+      "number": "IS 3196 (Part 1)",
+      "edition_year": 1991,
+      "title": "LPG Cylinder Valves, Part 1: Specification",
+      "scope": "Design and performance requirements for valves fitted to LPG cylinders.",
+      "committee": "CHD 20",
+      "department": "Chemical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_LPG_CYLINDERS_2019",
+        "scheme": "ISI"
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "cylinder valve",
+        "LPG valve",
+        "gas valve",
+        "regulator valve"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_10500_2012",
+      "number": "IS 10500",
+      "edition_year": 2012,
+      "title": "Drinking Water — Specification",
+      "scope": "Prescribes physical, chemical, and biological quality requirements for water intended for human consumption.",
+      "committee": "CHD 25",
+      "department": "Chemical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_10500_1991"
+      ],
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_3025_1_1987",
+          "type": "test_method",
+          "note": "Sampling and test methods for physical/chemical water parameters."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_PACKAGED_WATER_2021",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "drinking water",
+        "potable water",
+        "tap water",
+        "water quality",
+        "peene ka paani",
+        "peene ka pani",
+        "pine ka pani"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_10500_1991",
+      "number": "IS 10500",
+      "edition_year": 1991,
+      "title": "Drinking Water — Specification (Earlier Edition)",
+      "scope": "Superseded edition of drinking water quality requirements.",
+      "committee": "CHD 25",
+      "department": "Chemical Engineering",
+      "status": "superseded",
+      "superseded_by": [
+        "IS_10500_2012"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "drinking water",
+        "potable water",
+        "water quality"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_3025_1_1987",
+      "number": "IS 3025 (Part 1)",
+      "edition_year": 1987,
+      "title": "Methods of Sampling and Test (Physical and Chemical) for Water and Wastewater, Part 1: Sampling",
+      "scope": "Specifies sampling procedures for physical and chemical analysis of water and wastewater.",
+      "committee": "CHD 25",
+      "department": "Chemical Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "water testing",
+        "water sampling",
+        "water analysis"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_14543_2021",
+      "number": "IS 14543",
+      "edition_year": 2021,
+      "title": "Packaged Natural Mineral Water — Specification",
+      "scope": "Requirements for packaged natural mineral water intended for direct human consumption.",
+      "committee": "FAD 14",
+      "department": "Food and Agriculture",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_14543_2004"
+      ],
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_10500_2012",
+          "type": "related_product",
+          "note": "Baseline drinking-water quality parameters referenced as a floor requirement."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_PACKAGED_WATER_2021",
+        "scheme": "ISI"
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "mineral water",
+        "packaged water",
+        "bottled water",
+        "packaged drinking water",
+        "water bottle"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_14543_2004",
+      "number": "IS 14543",
+      "edition_year": 2004,
+      "title": "Packaged Natural Mineral Water — Specification (Earlier Edition)",
+      "scope": "Superseded edition of packaged mineral water requirements.",
+      "committee": "FAD 14",
+      "department": "Food and Agriculture",
+      "status": "superseded",
+      "superseded_by": [
+        "IS_14543_2021"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "mineral water",
+        "packaged water",
+        "bottled water"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_4151_2015",
+      "number": "IS 4151",
+      "edition_year": 2015,
+      "title": "Protective Helmets for Two-Wheeler Users — Specification",
+      "scope": "Prescribes construction, performance, and testing requirements for protective helmets used by two-wheeler riders.",
+      "committee": "TED 22",
+      "department": "Transport Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2019-06",
+          "summary": "Revised impact-absorption test limits."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_2925_1984",
+          "type": "test_method",
+          "note": "Industrial safety helmet test methods referenced for shared impact-testing procedure."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_HELMETS_2020",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "helmet",
+        "two wheeler helmet",
+        "bike helmet",
+        "motorcycle helmet",
+        "ISI helmet",
+        "rider helmet",
+        "full face helmet"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_2925_1984",
+      "number": "IS 2925",
+      "edition_year": 1984,
+      "title": "Industrial Safety Helmets — Specification",
+      "scope": "Requirements for industrial (occupational) safety helmets, distinct from two-wheeler helmets.",
+      "committee": "CED 41",
+      "department": "Civil Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "safety helmet",
+        "industrial helmet",
+        "hard hat",
+        "construction helmet",
+        "site helmet",
+        "worker helmet"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_9873_1_2019",
+      "number": "IS 9873 (Part 1)",
+      "edition_year": 2019,
+      "title": "Safety of Toys, Part 1: Mechanical and Physical Properties",
+      "scope": "Safety requirements for mechanical and physical properties of toys intended for children.",
+      "committee": "PGD 30",
+      "department": "Production and General Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_9873_9_2017",
+          "type": "related_product",
+          "note": "Companion part covering organic-chemical safety requirements for toys."
+        },
+        {
+          "id": "IS_9873_4_2017",
+          "type": "safety",
+          "note": "Additional part specifying migration-of-elements safety limits."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_TOYS_2020",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "toy safety",
+        "toys",
+        "khilona",
+        "khilaune",
+        "toy mechanical safety"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_9873_4_2017",
+      "number": "IS 9873 (Part 4)",
+      "edition_year": 2017,
+      "title": "Safety of Toys, Part 4: Migration of Certain Elements",
+      "scope": "Specifies migration limits for certain hazardous elements in toy materials.",
+      "committee": "PGD 30",
+      "department": "Production and General Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_TOYS_2020",
+        "scheme": "ISI"
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "toy heavy metals",
+        "toy migration elements",
+        "toys",
+        "khilona"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_9873_9_2017",
+      "number": "IS 9873 (Part 9)",
+      "edition_year": 2017,
+      "title": "Safety of Toys, Part 9: Organic Chemical Compounds — Requirements",
+      "scope": "Specifies limits on organic chemical compounds used in toy materials.",
+      "committee": "PGD 30",
+      "department": "Production and General Engineering",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_TOYS_2020",
+        "scheme": "ISI"
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "toy chemicals",
+        "phthalates in toys",
+        "toys",
+        "khilona"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_1417_2016",
+      "number": "IS 1417",
+      "edition_year": 2016,
+      "title": "Grading and Fineness of Gold and Gold Alloys, and Their Fineness Marking — Specification",
+      "scope": "Prescribes fineness grades and marking requirements for gold and gold-alloy jewellery and articles.",
+      "committee": "MTD 5",
+      "department": "Metallurgical Engineering (Precious Metals)",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [
+        {
+          "id": "IS_2112_2025",
+          "type": "related_product",
+          "note": "Parallel fineness/marking standard for silver and silver alloys."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_HALLMARKING_GOLD_2021",
+        "scheme": "Hallmark"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "gold hallmark",
+        "gold jewellery",
+        "gold purity",
+        "hallmarking gold",
+        "sona",
+        "sone ke gehne",
+        "gehna",
+        "carat gold"
+      ],
+      "designations": [
+        "22K",
+        "18K",
+        "24K",
+        "14K",
+        "916",
+        "750",
+        "999"
+      ]
+    },
+    {
+      "id": "IS_2112_2025",
+      "number": "IS 2112",
+      "edition_year": 2025,
+      "title": "Grading and Fineness of Silver and Silver Alloys, and Their Fineness Marking — Specification",
+      "scope": "Prescribes fineness grades and HUID marking requirements for silver and silver-alloy articles where hallmarked.",
+      "committee": "MTD 5",
+      "department": "Metallurgical Engineering (Precious Metals)",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": [
+        "IS_2112_1979"
+      ],
+      "amendments": [],
+      "allied": [],
+      "qco": {
+        "mandatory": false,
+        "order_id": null,
+        "scheme": "Hallmark",
+        "note": "Silver hallmarking is currently voluntary; if a manufacturer opts in, HUID marking under this standard becomes mandatory for that batch."
+      },
+      "data_confidence": "medium",
+      "aliases": [
+        "silver hallmark",
+        "silver jewellery",
+        "silver purity",
+        "chandi",
+        "chandi ke gehne"
+      ],
+      "designations": [
+        "925",
+        "990",
+        "999"
+      ]
+    },
+    {
+      "id": "IS_2112_1979",
+      "number": "IS 2112",
+      "edition_year": 1979,
+      "title": "Grading and Fineness of Silver and Silver Alloys — Specification (Earlier Edition)",
+      "scope": "Superseded edition of silver fineness grading requirements.",
+      "committee": "MTD 5",
+      "department": "Metallurgical Engineering (Precious Metals)",
+      "status": "superseded",
+      "superseded_by": [
+        "IS_2112_2025"
+      ],
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "silver hallmark",
+        "silver jewellery",
+        "silver purity"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_1885_21_1987",
+      "number": "IS 1885 (Part 21)",
+      "edition_year": 1987,
+      "title": "Electrotechnical Vocabulary, Part 21: Rotating Machinery",
+      "scope": "Defines standard terminology and definitions used across rotating-machinery electrotechnical standards.",
+      "committee": "ETD 1",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "rotating machinery vocabulary",
+        "motor terminology",
+        "electrical vocabulary"
+      ],
+      "designations": []
+    },
+    {
+      "id": "IS_7098_1_2003",
+      "number": "IS 7098 (Part 1)",
+      "edition_year": 2003,
+      "title": "Cross-Linked Polyethylene Insulated PVC Sheathed Cables, Part 1: For Working Voltages up to 1100V",
+      "scope": "Specifies construction, insulation, and testing requirements for XLPE power cables up to 1100V.",
+      "committee": "ETD 9",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [
+        {
+          "no": 1,
+          "date": "2012-09",
+          "summary": "Updated conductor sizing tables."
+        }
+      ],
+      "allied": [
+        {
+          "id": "IS_10810_1984",
+          "type": "test_method",
+          "note": "General methods of test for cables referenced for electrical/mechanical test procedures."
+        }
+      ],
+      "qco": {
+        "mandatory": true,
+        "order_id": "QCO_CABLES_2021",
+        "scheme": "ISI"
+      },
+      "data_confidence": "high",
+      "aliases": [
+        "XLPE cable",
+        "LT cable",
+        "power cable",
+        "PVC sheathed cable",
+        "armoured cable",
+        "electric cable",
+        "bijli ka taar",
+        "taar",
+        "wire and cable"
+      ],
+      "designations": [
+        "1.1 kV",
+        "650/1100 V",
+        "1100 V"
+      ]
+    },
+    {
+      "id": "IS_10810_1984",
+      "number": "IS 10810",
+      "edition_year": 1984,
+      "title": "Methods of Test for Cables",
+      "scope": "Specifies general electrical and mechanical test methods applicable across cable specifications.",
+      "committee": "ETD 9",
+      "department": "Electrotechnical",
+      "status": "active",
+      "superseded_by": null,
+      "supersedes": null,
+      "amendments": [],
+      "allied": [],
+      "qco": null,
+      "data_confidence": "medium",
+      "aliases": [
+        "cable testing",
+        "cable test method",
+        "cable type test"
+      ],
+      "designations": []
+    }
+  ]
+}

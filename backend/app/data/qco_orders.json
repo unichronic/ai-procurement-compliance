@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "note": "QCOs (Quality Control Orders) are issued under Section 16 of the BIS Act, 2016, mostly by DPIIT but also by sectoral ministries. As of 2026 there are ~187 QCOs covering ~769 product categories, and new orders are notified on a rolling basis -- this table is illustrative, not exhaustive. In production this must be a maintained/refreshable feed (e.g. re-scraped from DPIIT/BIS notifications on a schedule), not a static file, since new QCOs (furniture, cookware, bearings, etc.) have been added through 2025-2026."
+  },
+  "orders": [
+    {"id": "QCO_BISCUITS_2021", "name": "Biscuits (Quality Control) Order, 2021", "issuing_authority": "Ministry of Consumer Affairs, Food & Public Distribution", "scheme": "ISI", "notified": "2021-09"},
+    {"id": "QCO_ELECTRIC_MOTORS_2022", "name": "Electric Motors (Quality Control) Order, 2022", "issuing_authority": "DPIIT", "scheme": "ISI", "notified": "2022-03"},
+    {"id": "QCO_STEEL_2021", "name": "Steel and Steel Products (Quality Control) Order, 2021 (Amendment)", "issuing_authority": "Ministry of Steel", "scheme": "ISI", "notified": "2021-01"},
+    {"id": "QCO_HOUSEHOLD_ELEC_2020", "name": "Household and Similar Electrical Appliances (Quality Control) Order, 2020", "issuing_authority": "DPIIT", "scheme": "CRS", "notified": "2020-08"},
+    {"id": "QCO_ELECTRONICS_IT_2012", "name": "Electronics and Information Technology Goods (Requirements for Compulsory Registration) Order, 2012", "issuing_authority": "MeitY", "scheme": "CRS", "notified": "2012-10"},
+    {"id": "QCO_LPG_CYLINDERS_2019", "name": "LPG Cylinders (Quality Control) Order, 2019", "issuing_authority": "Ministry of Petroleum & Natural Gas", "scheme": "ISI", "notified": "2019-11"},
+    {"id": "QCO_PACKAGED_WATER_2021", "name": "Drinking Water and Packaged Natural Mineral Water (Quality Control) Order, 2021", "issuing_authority": "Ministry of Consumer Affairs, Food & Public Distribution", "scheme": "ISI", "notified": "2021-03"},
+    {"id": "QCO_HELMETS_2020", "name": "Protective Helmets for Two-Wheeler Riders (Quality Control) Order, 2020", "issuing_authority": "Ministry of Road Transport & Highways", "scheme": "ISI", "notified": "2020-11"},
+    {"id": "QCO_TOYS_2020", "name": "Toys (Quality Control) Order, 2020", "issuing_authority": "DPIIT", "scheme": "ISI", "notified": "2020-01"},
+    {"id": "QCO_HALLMARKING_GOLD_2021", "name": "Gold and Gold Jewellery/Artefacts (Hallmarking) Order, 2021 (as amended)", "issuing_authority": "Ministry of Consumer Affairs, Food & Public Distribution", "scheme": "Hallmark", "notified": "2021-06"},
+    {"id": "QCO_CABLES_2021", "name": "Electric Cables and Conductors (Quality Control) Order, 2021", "issuing_authority": "DPIIT", "scheme": "ISI", "notified": "2021-05"}
+  ]
+}
