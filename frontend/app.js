@@ -36,6 +36,41 @@ sampleBtn.addEventListener("click", () => {
   textEl.value = SAMPLE_DRAFT;
 });
 
+const uploadBtn = document.getElementById("upload-btn");
+const fileInput = document.getElementById("file-input");
+
+uploadBtn.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) return;
+
+  setMode("lint");
+  submitBtn.disabled = true;
+  resultsEl.innerHTML = "";
+  setStatus(`Extracting text from ${file.name}…`);
+
+  try {
+    const body = new FormData();
+    body.append("file", file);
+    const resp = await fetch("/lint/upload", { method: "POST", body });
+    if (!resp.ok) {
+      let detail = resp.statusText;
+      try { detail = (await resp.json()).detail || detail; } catch (_) {}
+      throw new Error(`${resp.status}: ${detail}`);
+    }
+    const data = await resp.json();
+    // Show the text the rules actually ran against, so highlighted spans line up.
+    textEl.value = data.document_text;
+    renderLint(data, data.document_text);
+    setStatus(`${file.name} — ${data.characters_extracted.toLocaleString()} characters extracted.`);
+  } catch (err) {
+    setStatus(err.message || "Could not read that file.", true);
+  } finally {
+    submitBtn.disabled = false;
+    fileInput.value = "";
+  }
+});
+
 function setMode(next) {
   mode = next;
   modeSingleBtn.classList.toggle("active", mode === "single");

@@ -1,29 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-
-from app.main import app, _state
-
-
-class _StubExplainer:
-    """Deterministic, network-free stand-in for ExplanationGenerator so the
-    API test suite doesn't depend on internet access or a live Groq key."""
-
-    available = True
-
-    def generate(self, standard, match, certification=None):
-        return {
-            "explanation": f"stub explanation for {standard.get('number')}",
-            "source": "stub",
-        }
-
-
-@pytest.fixture(scope="module")
-def client():
-    with TestClient(app) as c:
-        _state["explainer"] = _StubExplainer()
-        yield c
-
-
 def test_health(client):
     resp = client.get("/health")
     assert resp.status_code == 200

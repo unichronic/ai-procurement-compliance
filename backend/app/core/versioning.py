@@ -25,7 +25,10 @@ class VersionResolver:
         # into two IE/IEC-aligned successors -- we surface all of them.)
         latest_ids: List[str] = []
         if current["status"] == "superseded" or current["status"] == "withdrawn":
-            frontier = current.get("superseded_by") or []
+            # Copy: pop() below would otherwise consume the standard's own
+            # superseded_by list, so the first lookup would succeed and every
+            # later one would silently report no successor.
+            frontier = list(current.get("superseded_by") or [])
             seen = set(chain)
             while frontier:
                 nxt_id = frontier.pop(0)

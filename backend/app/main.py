@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -19,6 +21,8 @@ from app.core.certification import CertificationAdvisor
 from app.core.batch import split_document
 from app.core.explain import ExplanationGenerator
 from app.core.lint import SpecLinter
+from app.core.documents import UnsupportedDocument, extract_text
+from app.core.limits import MAX_DOCUMENT_CHARS, MAX_QUERY_CHARS, RateLimiter
 
 load_dotenv()
 
@@ -56,7 +60,9 @@ async def lifespan(app: FastAPI):
         certification=_state["certification"],
     )
     yield
-    _state.clear()
+    # Deliberately not clearing _state: it is module-level, so tearing it down
+    # on one app instance's shutdown breaks any other instance sharing the
+    # process (two servers in one test session, an embedded worker, etc).
 
 
 app = FastAPI(
@@ -70,20 +76,65 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+# The UI is served same-origin from /ui, so wildcard CORS is only needed when
+# a separate front end or a procurement portal calls the API cross-origin.
+# Default to the local dev origins and let deployments opt in explicitly
+# rather than shipping "*" by accident.
+_origins_env = os.environ.get("ALLOWED_ORIGINS", "").strip()
+ALLOWED_ORIGINS = (
+    [o.strip() for o in _origins_env.split(",") if o.strip()]
+    if _origins_env
+    else ["http://127.0.0.1:8008", "http://localhost:8008"]
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
-def _confidence_band(semantic_similarity: float) -> str:
+_rate_limiter = RateLimiter()
+
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    if request.url.path.startswith("/ui") or request.method == "OPTIONS":
+        return await call_next(request)
+
+    client_key = request.client.host if request.client else "unknown"
+    if not _rate_limiter.check(client_key):
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Rate limit exceeded. Slow down and retry."},
+            headers={"Retry-After": str(_rate_limiter.retry_after(client_key))},
+        )
+    return await call_next(request)
+
+
+def _confidence_band(semantic_similarity: float, data_confidence: str = "high") -> str:
+    """Match strength, capped by how much we trust the underlying record.
+
+    A strong semantic match against a record whose own metadata is unverified
+    is not a high-confidence recommendation -- the retrieval is only as good as
+    the data it ranked. Records the ingest pipeline verified against the real
+    BIS document are "high"; hand-entered ones that were never verified are
+    capped so the UI can't present them as equally certain.
+    """
     if semantic_similarity >= 0.55:
-        return "high"
-    if semantic_similarity >= 0.35:
+        band = "high"
+    elif semantic_similarity >= 0.35:
+        band = "medium"
+    else:
+        band = "low"
+
+    if data_confidence == "low" and band == "high":
         return "medium"
-    return "low"
+    if data_confidence == "low":
+        return "low"
+    if data_confidence == "medium" and band == "high":
+        return "medium"
+    return band
 
 
 def _build_recommendation(hit: Dict[str, Any]) -> Dict[str, Any]:
@@ -102,8 +153,10 @@ def _build_recommendation(hit: Dict[str, Any]) -> Dict[str, Any]:
         "committee": s["committee"],
         "department": s["department"],
         "data_confidence": s.get("data_confidence", "unknown"),
+        "verified_against_source": bool(s.get("source")),
         "match": {
-            "confidence_band": _confidence_band(hit["semantic_similarity"]),
+            "confidence_band": _confidence_band(
+                hit["semantic_similarity"], s.get("data_confidence", "high")),
             "semantic_similarity": round(hit["semantic_similarity"], 4),
             "lexical_rank": hit["lexical_rank"],
             "semantic_rank": hit["semantic_rank"],
@@ -158,6 +211,10 @@ def health():
 def recommend(req: RecommendRequest):
     if not req.text or not req.text.strip():
         raise HTTPException(400, "text must not be empty")
+    if len(req.text) > MAX_QUERY_CHARS:
+        raise HTTPException(
+            413, f"text exceeds {MAX_QUERY_CHARS} characters; use /batch or /lint "
+                 f"for whole documents")
 
     hits = _state["index"].search(req.text, top_k=req.top_k)
     recommendations = [_build_recommendation(h) for h in hits]
@@ -170,6 +227,9 @@ def recommend(req: RecommendRequest):
 
 @app.post("/batch")
 def batch_recommend(req: BatchRequest):
+    if len(req.document_text) > MAX_DOCUMENT_CHARS:
+        raise HTTPException(413, f"document exceeds {MAX_DOCUMENT_CHARS} characters")
+
     items = split_document(req.document_text)
     if not items:
         raise HTTPException(400, "Could not extract any line items from document_text")
@@ -200,9 +260,35 @@ def lint_specification(req: LintRequest):
     """
     if not req.document_text or not req.document_text.strip():
         raise HTTPException(400, "document_text must not be empty")
+    if len(req.document_text) > MAX_DOCUMENT_CHARS:
+        raise HTTPException(413, f"document exceeds {MAX_DOCUMENT_CHARS} characters")
 
     result = _state["linter"].lint(req.document_text, suggest_missing=req.suggest_missing)
     return result
+
+
+@app.post("/lint/upload")
+async def lint_uploaded_document(file: UploadFile = File(...),
+                                 suggest_missing: bool = True):
+    """Audit a tender supplied as a PDF/DOCX/TXT upload.
+
+    Returns the extracted text alongside the findings so the client can render
+    the spans against exactly the text the rules were applied to.
+    """
+    data = await file.read()
+    try:
+        text = extract_text(data, filename=file.filename,
+                            content_type=file.content_type)
+    except UnsupportedDocument as exc:
+        raise HTTPException(400, str(exc))
+
+    result = _state["linter"].lint(text, suggest_missing=suggest_missing)
+    return {
+        "filename": file.filename,
+        "characters_extracted": len(text),
+        "document_text": text,
+        **result,
+    }
 
 
 @app.post("/explain")

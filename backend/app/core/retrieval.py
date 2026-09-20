@@ -16,6 +16,7 @@ via Reciprocal Rank Fusion, so neither signal alone can starve the other.
 """
 from __future__ import annotations
 
+import os
 import re
 from typing import List, Dict, Any, Optional
 
@@ -28,6 +29,13 @@ _TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 # Roughly 2x the best possible RRF contribution (2/61), so a single designation
 # hit reliably outranks a standard that merely scored well on both soft channels.
 DESIGNATION_WEIGHT = 0.05
+
+# Max-pooling over chunks gives chunk-rich standards more chances at a high
+# score regardless of relevance, and only part of the corpus has ingested full
+# text. Damping makes a chunk match win only when it is clearly better than the
+# standard's own metadata match, which removes that bias. Tuned on the eval set
+# (see README) -- undamped max-pool measurably regressed overall R@1.
+CHUNK_SCORE_DAMPING = float(os.environ.get("CHUNK_SCORE_DAMPING", "0.88"))
 
 
 def _tokenize(text: str) -> List[str]:
@@ -43,6 +51,8 @@ class StandardsIndex:
         self._bm25: BM25Okapi | None = None
         self._embeddings: np.ndarray | None = None
         self._designations: List[List[str]] = []
+        self._chunk_embeddings: np.ndarray | None = None
+        self._chunk_owner: List[int] = []
 
     def _doc_text(self, s: Dict[str, Any]) -> str:
         # Aliases go into the indexed text because the hard case in procurement
@@ -57,7 +67,17 @@ class StandardsIndex:
     def build(self) -> None:
         docs = [self._doc_text(s) for s in self.standards]
 
-        tokenized = [_tokenize(d) for d in docs]
+        # Chunks carry the document's own requirement clauses. Lexically they
+        # belong in the same BM25 document (more vocabulary, same standard);
+        # semantically they must stay separate, because averaging a whole
+        # standard into one vector washes out the specific passage that
+        # actually answers the query.
+        tokenized = []
+        for idx, doc in enumerate(docs):
+            chunk_text = " ".join(
+                c.get("text", "") for c in (self.standards[idx].get("chunks") or [])
+            )
+            tokenized.append(_tokenize(f"{doc} {chunk_text}"))
         self._bm25 = BM25Okapi(tokenized)
 
         self._designations = [
@@ -68,6 +88,38 @@ class StandardsIndex:
         self._embeddings = self._model.encode(
             docs, normalize_embeddings=True, show_progress_bar=False
         )
+
+        chunk_texts: List[str] = []
+        self._chunk_owner = []
+        for idx, s in enumerate(self.standards):
+            for chunk in (s.get("chunks") or []):
+                text = chunk.get("text")
+                if text:
+                    chunk_texts.append(text)
+                    self._chunk_owner.append(idx)
+
+        self._chunk_embeddings = (
+            self._model.encode(chunk_texts, normalize_embeddings=True, show_progress_bar=False)
+            if chunk_texts else None
+        )
+
+    def _semantic_scores(self, q_emb: np.ndarray) -> np.ndarray:
+        """Metadata score, max-pooled against the standard's own chunks.
+
+        Max rather than mean: the question is "does this standard contain a
+        passage that answers the query", and one strongly matching clause is
+        the answer even when the other seven clauses are irrelevant.
+        """
+        scores = self._embeddings @ q_emb
+        if self._chunk_embeddings is None:
+            return scores
+
+        chunk_scores = self._chunk_embeddings @ q_emb * CHUNK_SCORE_DAMPING
+        pooled = scores.copy()
+        for chunk_idx, owner in enumerate(self._chunk_owner):
+            if chunk_scores[chunk_idx] > pooled[owner]:
+                pooled[owner] = chunk_scores[chunk_idx]
+        return pooled
 
     def _designation_scores(self, query: str) -> np.ndarray:
         """Symbolic channel: exact hits on technical designations (E250, IE3,
@@ -99,7 +151,7 @@ class StandardsIndex:
 
         # Semantic ranking
         q_emb = self._model.encode([query], normalize_embeddings=True, show_progress_bar=False)[0]
-        sem_scores = self._embeddings @ q_emb
+        sem_scores = self._semantic_scores(q_emb)
         semantic_order = np.argsort(-sem_scores)
 
         # Reciprocal Rank Fusion (k=60 is the standard RRF damping constant).

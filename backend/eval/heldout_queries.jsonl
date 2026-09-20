@@ -1,0 +1,22 @@
+{"query": "head protection gear for scooter and moped riders", "expected_ids": ["IS_4151_2015"], "query_type": "trade_name"}
+{"query": "protective headgear for labourers at building sites", "expected_ids": ["IS_2925_1984"], "query_type": "trade_name"}
+{"query": "underground conductor for electricity distribution network", "expected_ids": ["IS_7098_1_2003"], "query_type": "trade_name"}
+{"query": "steel container for liquefied petroleum fuel used in kitchens", "expected_ids": ["IS_4038_1986"], "query_type": "trade_name"}
+{"query": "purity marking for ornaments made of yellow precious metal", "expected_ids": ["IS_1417_2016"], "query_type": "trade_name"}
+{"query": "municipal supply fitness for human consumption", "expected_ids": ["IS_10500_2012"], "query_type": "trade_name"}
+{"query": "rolled girders and joists for workshop shed fabrication", "expected_ids": ["IS_2062_2011"], "query_type": "trade_name"}
+{"query": "playthings for children under three years, choking hazard", "expected_ids": ["IS_9873_1_2019"], "query_type": "trade_name"}
+{"query": "sealed containers of natural spring water for departmental supply", "expected_ids": ["IS_14543_2021"], "query_type": "trade_name"}
+{"query": "graded stone ballast for concrete mixing", "expected_ids": ["IS_383_2016"], "query_type": "trade_name"}
+{"query": "high efficiency three phase rotating machine for pump duty", "expected_ids": ["IS_12615_2018"], "query_type": "trade_name"}
+{"query": "electrical safety of office computing hardware", "expected_ids": ["IS_13252_1_2010"], "query_type": "trade_name"}
+{"query": "baked flour confectionery for midday meal scheme", "expected_ids": ["IS_1011_2002"], "query_type": "trade_name"}
+{"query": "solid state lighting units for office illumination", "expected_ids": ["IS_16102_1_2012", "IS_15885_2_1_2018"], "query_type": "trade_name"}
+{"query": "closure fitting for petroleum fuel vessel", "expected_ids": ["IS_3196_1_1991"], "query_type": "trade_name"}
+{"query": "स्कूटर चालकों के लिए सुरक्षा टोपी", "expected_ids": ["IS_4151_2015"], "query_type": "hindi"}
+{"query": "रसोई में प्रयुक्त ईंधन का इस्पात पात्र", "expected_ids": ["IS_4038_1986"], "query_type": "hindi"}
+{"query": "नगरपालिका जल आपूर्ति की गुणवत्ता", "expected_ids": ["IS_10500_2012"], "query_type": "hindi"}
+{"query": "bachon ke khelne ki cheez ki safety", "expected_ids": ["IS_9873_1_2019"], "query_type": "code_mixed"}
+{"query": "scooter wale ke liye suraksha topi", "expected_ids": ["IS_4151_2015"], "query_type": "code_mixed"}
+{"query": "Supply of rolled girders and joists, grade E350, for shed fabrication works", "expected_ids": ["IS_2062_2011"], "query_type": "parametric"}
+{"query": "Procurement of head protection gear for departmental scooter riders, 200 nos.", "expected_ids": ["IS_4151_2015"], "query_type": "tender_line"}

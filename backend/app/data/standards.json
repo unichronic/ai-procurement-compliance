@@ -2,15 +2,16 @@
   "_meta": {
     "note": "DEMO SEED DATASET. BIS does not expose full standard text via any free/open bulk channel (the 'free' download scheme wraps PDFs in FileOpen DRM that blocks extraction), so this dataset is built from publicly known titles/scopes/committee metadata, not scraped full text. data_confidence flags which entries are well-established public knowledge ('high') vs illustrative/approximate ('medium') -- a real deployment would replace this file with a scraped+cross-checked feed from standards.bis.gov.in (Know Your Standard) and Manak Online, and should NEVER present 'medium' confidence entries to a user without a verification flag, matching the failure mode of the BIS-Standards-AI-Assistant dataset repo (8/22 hand-curated entries later found wrong).",
     "schema_version": "1.0",
-    "count_placeholder": "see standards array"
+    "count_placeholder": "see standards array",
+    "last_ingest": "2026-09-20T09:31:54.116102+00:00"
   },
   "standards": [
     {
       "id": "IS_1011_2002",
       "number": "IS 1011",
       "edition_year": 2002,
-      "title": "Biscuits — Specification",
-      "scope": "Prescribes requirements for ingredients, quality, chemical parameters, and packing of biscuits intended for direct human consumption.",
+      "title": "Biscuits - Specification",
+      "scope": "This standard prescribes the requirements, methods of sampling and test for biscuits baked from dough containing essential ingredients ( see 3 ) with or without the addition of optional ingredients ( see 4 ). SPECIFICATION 4.1.2 Oil Seed Products Soya bean flour, full fat ( see IS 7837 ), medium fat ( see IS 7836 ) or solvent extracted low fat ( see IS 7835 ) Peanuts Peanut butter ( see IS 9037 ) Edible groundnut flour, expeller pressed ( see IS 4684 ) or solvent extracted (see IS 4875 ) High protein mixes for use as food supplement, (see IS 3137). Other oil seed flours, protein isolates and concentrates. ( Fourth Revision)",
       "committee": "FAD 15",
       "department": "Food and Agriculture",
       "status": "active",
@@ -47,7 +48,151 @@
         "cookies",
         "bakery biscuit"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "67.060",
+      "chunks": [
+        {
+          "kind": "scope",
+          "text": "This standard prescribes the requirements, methods of sampling and test for biscuits baked from dough containing essential ingredients ( see 3 ) with or without the addition of optional ingredients ( see 4 ). SPECIFICATION 4.1.2 Oil Seed Products Soya bean flour, full fat ( see IS 7837 ), medium fat ( see IS 7836 ) or solvent extracted low fat ( see IS 7835 ) Peanuts Peanut butter ( see IS 9037 ) Edible groundnut flour, expeller pressed ( see IS 4684 ) or solvent extracted (see IS 4875 ) High protein mixes for use as food supplement, (see IS 3137). Other oil seed flours, protein isolates and concentrates. ( Fourth Revision)"
+        },
+        {
+          "kind": "normative_references",
+          "text": "Refers to: IS 9504, IS 9971, IS 9988, IS 10597, IS 10633, IS 10634, IS 12451, IS 12741, IS 13334 (Part 1), IS 13334 (Part 2), IS 7224, IS 7463, IS 7835, IS 7836, IS 7837, IS 8970, IS 14703, IS 9037, IS 9130"
+        },
+        {
+          "kind": "body",
+          "text": "1 SCOPE This standard prescribes the requirements, methods of sampling and test for biscuits baked from dough containing essential ingredients ( see 3 ) with or without the addition of optional ingredients ( see 4 ). SPECIFICATION"
+        },
+        {
+          "kind": "body",
+          "text": "2 Oil Seed Products Soya bean flour, full fat ( see IS 7837 ), medium fat ( see IS 7836 ) or solvent extracted low fat ( see IS 7835 ) Peanuts Peanut butter ( see IS 9037 ) Edible groundnut flour, expeller pressed ( see IS 4684 ) or solvent extracted (see IS 4875 ) High protein mixes for use as food supplement, (see IS 3137). Other oil seed flours, protein isolates and concentrates. ( Fourth Revision)"
+        },
+        {
+          "kind": "body",
+          "text": "3 EJihle Starches Tapioca flour, edible ( see IS 1318 ) Potato flour, edible ( see IS 9130 ) Sweet potato flour, edible Arrowroot starch, edible ( see IS 1006 ) Maize starch, edible ( see IS 1005 ) Tapioca starch, edible ( see IS 1319 ) Rice starch, edible Potato starch, edible"
+        },
+        {
+          "kind": "body",
+          "text": "2 Fat or Shortening Vanaspati (see IS 10633), bakery shortening ( see IS )0634 ), refined edible vegetable oils, butter oil, butter, Ghee, margarine ( sec IS 12451 ) or their blends. 3.3 SU2ar (see IS 498, IS 1151 and IS 1152 )"
+        },
+        {
+          "kind": "body",
+          "text": "1 In addition to the essential ingredients specified under 3, any of the following ingredients may be used in the preparation of biscuits."
+        },
+        {
+          "kind": "body",
+          "text": "4 Milk and Milk Products Casein, edible ( see IS 1167 ) Milk powder ( see IS 1165 ) Skimed milk powder [see IS 13334 ( Parts 1 and 2 ) ] Butter milk and its solids Liquid milk Condensed milk ( see IS 1166 ) Cheese ( see IS 2785 ) Whey solids Malted milk food (see IS 1806 )"
+        },
+        {
+          "kind": "body",
+          "text": "1 Cereals and Cereal Products Whole wheat meal Wheat ATTA (see IS 1155 ) Semolina(SUJlorRAVA )(seeIS 1010) Wheat bran, edible Wheat germ Maize germ Barley powder (see IS 1157 ) Oat flour, edible BESAN flour (see IS 2400) Rice flour Malt flour"
+        },
+        {
+          "kind": "body",
+          "text": "5 Sugars Sugars ( sucrose) ( see IS 498, IS 1151 and IS 1152 ) Liquid glucose ( see IS 873 ) Dextrose monohydrate (see IS 874 ) Jaggery and Khandsari IS 1011 :"
+        }
+      ],
+      "referred_standards": [
+        {
+          "number": "9504",
+          "part": null,
+          "year": 1980
+        },
+        {
+          "number": "9971",
+          "part": null,
+          "year": 1981
+        },
+        {
+          "number": "9988",
+          "part": null,
+          "year": 1981
+        },
+        {
+          "number": "10597",
+          "part": null,
+          "year": 1983
+        },
+        {
+          "number": "10633",
+          "part": null,
+          "year": 1999
+        },
+        {
+          "number": "10634",
+          "part": null,
+          "year": 1986
+        },
+        {
+          "number": "12451",
+          "part": null,
+          "year": 1988
+        },
+        {
+          "number": "12741",
+          "part": null,
+          "year": 1989
+        },
+        {
+          "number": "13334",
+          "part": "1",
+          "year": 1996
+        },
+        {
+          "number": "13334",
+          "part": "2",
+          "year": 1996
+        },
+        {
+          "number": "7224",
+          "part": null,
+          "year": 1985
+        },
+        {
+          "number": "7463",
+          "part": null,
+          "year": 1988
+        },
+        {
+          "number": "7835",
+          "part": null,
+          "year": 1975
+        },
+        {
+          "number": "7836",
+          "part": null,
+          "year": 1975
+        },
+        {
+          "number": "7837",
+          "part": null,
+          "year": 1975
+        },
+        {
+          "number": "8970",
+          "part": null,
+          "year": 1991
+        },
+        {
+          "number": "14703",
+          "part": null,
+          "year": 1999
+        },
+        {
+          "number": "9037",
+          "part": null,
+          "year": 1979
+        },
+        {
+          "number": "9130",
+          "part": null,
+          "year": 1979
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.1011.2002",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_7463_1974",
@@ -231,9 +376,9 @@
       "id": "IS_456_2000",
       "number": "IS 456",
       "edition_year": 2000,
-      "title": "Plain and Reinforced Concrete — Code of Practice",
-      "scope": "Covers general structural design and workmanship requirements for plain and reinforced concrete construction.",
-      "committee": "CED 2",
+      "title": "Plain and Reinforced Concrete Code of Practice",
+      "scope": "1.1 This standard deals with the general structuraluse of plain and reinforced concrete. 1.1.1 For the purpose of this standard, plain concrete structures are those where reinforcement, if provided is ignoredfor determination of strengthof the structure. 1.2 Special requirements of structures, such as shells, folded plates, arches.bridges,chimneys,blastresistant structures, hydraulic structures, liquid retaining structures and earthquakeresistant structures,covered in respective standards have not been covered in this standard; these standards shall be used in.conjunction with this standard.",
+      "committee": "CEO 2",
       "department": "Civil Engineering",
       "status": "active",
       "superseded_by": null,
@@ -277,7 +422,50 @@
         "M30",
         "M35",
         "M40"
-      ]
+      ],
+      "ics": "91.100.30",
+      "chunks": [
+        {
+          "kind": "scope",
+          "text": "1.1 This standard deals with the general structuraluse of plain and reinforced concrete. 1.1.1 For the purpose of this standard, plain concrete structures are those where reinforcement, if provided is ignoredfor determination of strengthof the structure. 1.2 Special requirements of structures, such as shells, folded plates, arches.bridges,chimneys,blastresistant structures, hydraulic structures, liquid retaining structures and earthquakeresistant structures,covered in respective standards have not been covered in this standard; these standards shall be used in.conjunction with this standard."
+        },
+        {
+          "kind": "body",
+          "text": "1 For the purpose of this standard, plain concrete structures are those where reinforcement, if provided is ignoredfor determination of strengthof the structure."
+        },
+        {
+          "kind": "body",
+          "text": "2 Special requirements of structures, such as shells, folded plates, arches.bridges,chimneys,blastresistant structures, hydraulic structures, liquid retaining structures and earthquakeresistant structures,covered in respective standards have not been covered in this standard; these standards shall be used in.conjunction with this standard."
+        },
+        {
+          "kind": "body",
+          "text": "2 REFERENCES The Indian Standards listed in Annex A contain provisions which through reference in this text, EL E. e - - let. - t; f t1 t, I, H. Hwe Ie( 1 I, 'f - - constitute provisions of thil standard. At the time of publication, the edition. indicated were valid. All standards are subject to revision and parties to agreements based on this standard are encouraged to investigate the possibility of applying the most recent editions of the standards indicated in Annex A. ."
+        },
+        {
+          "kind": "body",
+          "text": "3 TERMINOLOGY For the purpose of this standard, the definitions Biven in IS 4845 and IS 6461 (Parts 1 to 12) shall generally apply. K k Ld U - Lw - ler lea Iey -"
+        },
+        {
+          "kind": "body",
+          "text": "4 SYMBOLS For the purpose of this standard, the following letter symbols shallhavethe mcanina indicated against each; where other symbols are used. they are explained at the appropriate place: A - Area b - Breadth of beam, or shorter dimension of a rectanguler column bet\" Effective width of slab b, Effective width of flanac b., - Breadth of web or rib D - Overall depth of beam or slab or diameter of column; dimension of a rectangular column in the direction under consideration Dr - Thickness of flange DL - Dead load d - Effective depth of beam or slab d' - Depth of compression reinforcement from the highly compressed face Ec - . Modulus of elasticity of concrete 11 I. I'n - I\" ly 1 0 I. - - - Earthquakeload Modulus of elasticity of steel Eccentricity Characteristic cube compressive stren.th of concrete Modulus of rupture of concrete (flexural tensile aU-oath) Splittin, tensile lU'eftltb of concrete Desip Itren,th Characteriatic ItrenJth of steel Unsupportedhei,ht of wall Effective hei,ht of wall Effective moment of inertia Momentof inertia of the gross section excluding reinforcement Moment of intertiaof cracked section Stiffness of member Constant or coefficient or factor Developm"
+        },
+        {
+          "kind": "body",
+          "text": "5 MATERIALS have no relation whatsoever with the characteristics guaranteed by the Quality Marking as relevant to that cement. Consumers are, therefore, advised to go by the characteristics as given in the corresponding Indian Standard Specification or seek specialist advise to avoid any problem in concrete making and construction. s.t Cement The cement used shall he any of the following and the type selected should be appropriate for the intended use: a) b) c)"
+        },
+        {
+          "kind": "body",
+          "text": "1 Pozzolanas Pozzolanic materials conforming to relevant Indian Standards may be used with the permission of the engineer-in-charge, provided uniform blending with cement is ensured."
+        },
+        {
+          "kind": "body",
+          "text": "1 Fly ash (pulverized fuel ash) Portland pozzolana cement (fly ash based) conforming to IS 1489 (Part 1) Portland pozzolana cement (calcined clay based) conforming to IS 1489 (Part 2) Fly ash conforming to Grade 1 of IS 3812 may be used as part replacement of ordinary Portland cement provided uniform blending with cement is ensured."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.456.2000",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_383_2016",
@@ -319,7 +507,7 @@
       "edition_year": 1970,
       "title": "Coarse and Fine Aggregate from Natural Sources for Concrete — Specification",
       "scope": "Earlier edition covering aggregate requirements for concrete; revised and reissued as IS 383:2016.",
-      "committee": "CED 2",
+      "committee": "BDC 2",
       "department": "Civil Engineering",
       "status": "superseded",
       "superseded_by": [
@@ -337,7 +525,45 @@
         "sand for concrete",
         "crushed stone"
       ],
-      "designations": []
+      "designations": [],
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "Indian Standard ( Reaffirmed 2002 ) SPECIFICATION FOR COARSE AND FINE AGGREGATES FROM NATURAL SOURCES FOR CONCRETE ( Second Revision) Ninth Reprint SEPTEMBER 1993 UDC 691.322 @ Co@yright"
+        },
+        {
+          "kind": "body",
+          "text": "1970 Indian Standard SPECIFICATION FOR COARSE AND FINE AGGREGATES FROM NATURAL SOURCES FOR CONCRETE ( Second Revision) Cement and Concrete Sectional Committee, BDC"
+        },
+        {
+          "kind": "body",
+          "text": "9 BAHADUR SHAH NEW DELHI 110002 IS:383-1970 (Continued from paxe 1) Representing M. N. Dastur & Co (P) Ltd, Calcutta The Institution of Engineers ( India ). Calcutta In personal capacity ( ` Ramanolayo `. II First CrcscenI Park Road, Gandhinagar,.Adyar, Madras 20 ) Engineer-in-Chief's Branch, Army Headquarters Structural Engineering Roorkee Research Centre ( CSIR ), Members SHRI S. R. KULKARNI SHRI ERACH A. NADIRSHAH SHRI K. K. NAMBIAR Biro NARESH PRASAD COL J. M. TOLANI ( Alternate) PROF G. S. RAMASWAI+~Y SHRI DR N. S. BRAL ( Alternate ) Gammon Iddia Ltd. Bombay T. N. S. RAO SARI S. R. PINHEIRO ( Alternate ) Hindustan Housing Factory Ltd, New Delhi SRRI K. G. SALVI SHEI C. L. KASLIWAL I Alternate ) Central Board of Irrigation & Power, New Delhi SECRETARY The India Cement Lid, Madras SHRI K. A. SUBRAMAZVIAM SRRI T. S. RAMAORANDRAN ( Alfemate ) Dalmia Cement ( Bharat ) Ltd, New Delhi SIXRI L. SWAROOP SHRI A. V. RAMANA ( Alternate ) Cement Research Institute of India, New Delhi DR H. C. VISVESVARAYA Director General, IBIS ( Ex-o&to Member ) SHRI R. NA~ARAJAN, Director ( Civ Engg ) Senelary SHRI Y. R. TANEJA Deputy Director ( Civ Engg ), BIS Concrete Convener SHRI S. B. Josa~ Membrrs "
+        },
+        {
+          "kind": "body",
+          "text": "25 September 1970, after the draft finalized by the Cement and Concrete Sectional Committee had been approved by the Civil Engineering Division Council."
+        },
+        {
+          "kind": "body",
+          "text": "2 This standard was first published in 1952 1963. The present revision of the standard porate the modification necessary in the light use and also to bring it in line with the latest"
+        },
+        {
+          "kind": "body",
+          "text": "1 The requirements included and it is proposed is printed. and subsequently revised in has been taken up to incorof experience gained in its thinking on the subject. for aggregates for mass concrete have been to withdraw IS: 515-1959*when this standard"
+        },
+        {
+          "kind": "body",
+          "text": "3 The limiting values for the permissible deleterious materials in the aggregates, aggregate abrasion value and soundness test for aggregates have been revised, Recommendations have been included for the size of aggregates for mass concrete. The four grading zones for fine aggregates as specified in the earlier version of the standard have not been changed. These four grading zones become progressively finer from Grading Zone I The fine aggregates within each of to Grading Zone IV (see Table 4). these grading zones are suitable for making concrete, but to make concrete of high strength and durability, the mix proportions should be c!iosen according to the grading characteristics of the fine aggregates used; the ratio of fine to coarse aggregate being reduced as the fine aggregate becomes finer from Grading Zones I to IV. In particular, the correct design of the mix becomes increasingly important as the grading of the fine aggregate approaches the coarse outer limit.of Grading Zone I or the fine outer limit of Grading Zone IV, and the suitability of a given fine aggregate grading may, in some circumstances, depend on the grading and shape of the coarse aggregate. It is sometimes fou"
+        },
+        {
+          "kind": "body",
+          "text": "31 The four grading zones indicated in this standard are meant to cover the use of the natural sands available in the country. It is, however, necessary to appreciate the limitations in either using a very coarse sand or a very fine sand and the need to make suitable changes in the mix design."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.383.1970",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_875_3_2015",
@@ -366,7 +592,7 @@
       "number": "IS 2062",
       "edition_year": 2011,
       "title": "Hot Rolled Medium and High Tensile Structural Steel — Specification",
-      "scope": "Prescribes chemical composition, mechanical properties, and dimensional tolerances for structural steel used in construction and fabrication.",
+      "scope": "1.1 This standard covers the requirements of steel including micro-alloyed steel plates, strips, shapes and sections (angles, tees, beams, channels, etc), flats, bars, etc, for use in structural work. 1.1.1 The steels are suitable for welded, bolted and riveted structures and for general engineering purposes: 1.1.2 Where welding is employed for fabrication and guaranteed-weldability is required, welding procedure should be as specified in IS 9595 : 1996 `Metal arc welding of carbon and carbon manganese steels -- Recommendations ( first revision)'.",
       "committee": "MTD 4",
       "department": "Metallurgical Engineering",
       "status": "active",
@@ -414,7 +640,50 @@
         "E450",
         "Fe 410",
         "Fe 490"
-      ]
+      ],
+      "ics": "77.140.01",
+      "chunks": [
+        {
+          "kind": "scope",
+          "text": "1.1 This standard covers the requirements of steel including micro-alloyed steel plates, strips, shapes and sections (angles, tees, beams, channels, etc), flats, bars, etc, for use in structural work. 1.1.1 The steels are suitable for welded, bolted and riveted structures and for general engineering purposes: 1.1.2 Where welding is employed for fabrication and guaranteed-weldability is required, welding procedure should be as specified in IS 9595 : 1996 `Metal arc welding of carbon and carbon manganese steels -- Recommendations ( first revision)'."
+        },
+        {
+          "kind": "body",
+          "text": "1 This standard covers the requirements of steel including micro-alloyed steel plates, strips, shapes and sections (angles, tees, beams, channels, etc), flats, bars, etc, for use in structural work."
+        },
+        {
+          "kind": "body",
+          "text": "2 Where welding is employed for fabrication and guaranteed-weldability is required, welding procedure should be as specified in IS 9595 : 1996 `Metal arc welding of carbon and carbon manganese steels -- Recommendations ( first revision)'."
+        },
+        {
+          "kind": "body",
+          "text": "2 REFERENCES The standards listed below contain provisions, which through reference in this text constitute provisions of this standard. At the time of publication, the editions indicated were valid. All standards are subject to revision and parties to agreement based on this standard are encouraged to investigate the possibility of applying the most recent editions of the standards indicated below: IS No. 228 (in various parts) 808 :"
+        },
+        {
+          "kind": "body",
+          "text": "1989 Title Methods for chemical analysis of steel Dimensions for hot rolled steel beam, column, channel and angle sections (third revision) Hot rolled slit steel tee bars (second revision ) Dimensions of hot rolled steel bulb angles (first revision) Method for bend test ( second revision ) Metallic materials -- Tensile testing at ambient temperature (third revision) Dimensions for steel plates sheets, strips and flats for general engineering purposes ( second revision ) 1 12779 :"
+        },
+        {
+          "kind": "body",
+          "text": "1989 Title Dimensions for round and square steel bars for structural and general engineering purposes (second revision ) Method for Charpy impact test (V-notch) for metallic material (second revision ) Rolling and cutting tolerances for hot rolled steel products (fourth revision ) Hot rolled steel bulb flats (first revision ) Glossary of terms relating to iron and steel Specification for steel sheet piling sections ( first revision) Steel -- Conversion of elongation values: Part"
+        },
+        {
+          "kind": "body",
+          "text": "1 Carbon and low alloy steels ( second revision ) Hot rolled steel channel sections for general engineering purposes (first revision ) General technical delivery requirements for steel and steel products (first revision) Dimensions and tolerances for hot rolled track shoe sections: Sections TS- L1 Sections TS- H1 Evaluation procedure for Ygroove weld crackability test in structural steel Hot rolled parallel flange steel sections for beams, columns and bearing piles -- Dimensions and section properties (first revision) Rolling and cutting tolerances for hot rolled parallel flange beam and column sections 1757 : 1988 1852 : 1985 1863 : 1979 1956 (in various parts) 2314 : 1986 3803 (Part 1) : 1989 3954 : 1991 8910 : 2010 10182 (Part 1) : 1982 (Part 2) : 1985 10842 : 1984 1173 : 1978 1252 : 1991 1599 : 1985 1608 : 2005 12778 : 2004 1730 : 1989"
+        },
+        {
+          "kind": "body",
+          "text": "3 TERMINOLOGY For the purpose of this standard, the definitions given in IS 1956 and the following shall apply. IS 2062 : 2011"
+        },
+        {
+          "kind": "body",
+          "text": "1 Micro-Alloying Elements -- Elements, such as niobium, vanadium and titanium added singly or in combination to obtain higher strength to weight ratio combined with better toughness, formability and weldability as compared to unalloyed steel of similar strength level."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.2062.2011",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_2062_2006",
@@ -448,9 +717,9 @@
       "id": "IS_1608_2005",
       "number": "IS 1608",
       "edition_year": 2005,
-      "title": "Metallic Materials — Tensile Testing at Ambient Temperature",
+      "title": "Metallic Materials - Tensile Testing at Ambient Temperature",
       "scope": "Specifies the method for tensile testing of metallic materials at room temperature.",
-      "committee": "MTD 2",
+      "committee": "MTD 3",
       "department": "Metallurgical Engineering",
       "status": "active",
       "superseded_by": null,
@@ -465,7 +734,46 @@
         "UTM test",
         "elongation test"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "77.040.10",
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "1988 ISO system of limits and fits - Part 2 : Tables of standard tolerance grades and limit deviations for holes and shafts Corresponding Indian Standard IS 919 ( Part 2 ) :"
+        },
+        {
+          "kind": "body",
+          "text": "2 Tables of standard tolerance grades and limit deviations for holes and shafts ( first revision) Degree of Equivalence Identical ISO 377 :"
+        },
+        {
+          "kind": "body",
+          "text": "1990 Wrought steel Selection and preparation of samples and test pieces for mechanical test ( first revision ) IS 3803 ( Part 1 ) :"
+        },
+        {
+          "kind": "body",
+          "text": "1 Tensile testing machines ( second revision) Technicalty equivalent Identical do ISO 7500-1 : 1986 1) Metallic materials Verification of static uniaxial testing mac.hines Part 1 : Tensile testing machines do 1) Since revised in 2004. ( Continued on third cover) IS 1608:"
+        },
+        {
+          "kind": "body",
+          "text": "1 Scope This International Standard specifies the method for tensile testing of metallic materials and defines the mechanical properties which can be determined at ambient temperature."
+        },
+        {
+          "kind": "body",
+          "text": "2 Normative references The following standards contain provisions which, through reference in this text, constitute provisions of this International Standard. At the time of publication, the editions indicated were valid. All standards are subject to revision, and parties to agreements based on this International Standard are encouraged to investigate the possibility of applying the most recent editions of the standards indicated below. Members of lEG and ISO maintain registers of currently valid International Standards. ISO 286-2:1988, ISO system of limits and fits deviations for holes and shafts. ISO 377:1997, Steel and steel products mechanical testing. ISO 2566-1 :1984, Steel - Part 2: Tables of standard tolerance grades and limit Location and preparation of samples and test pieces for Conversion of elongation values - Part 1: Carbon and low alloy steels. Part 2: Austenitic steels. Part 1: Tensile ISO 2566-2:1984, Steel- Conversion of elongation values ISO 7500-1 :1986, Metallic materials testing machines. ISO 9513:-1), Metallic materials - Verification of static uniaxial testing machines - Verification of extensometers used in uniaxial testing."
+        },
+        {
+          "kind": "body",
+          "text": "3 Principle The test involves straining a test piece by tensile force, generally to fracture, for the purpose of determining one or more of the mechanical properties defined in clause 4. The test is carried out at ambient temperature between 10�C and 35 �C, unless otherwise specified. Tests carried out under controlled conditions shall be made at a temperature of 23 �C � 5�C. 1) To be published. (Revision of ISO 9513:1989) 1-270 8fS12OO8 1 IS 1608:"
+        },
+        {
+          "kind": "body",
+          "text": "4 Definitions For the purpose of this International Standard, the following definitions apply. 4.1 gauge length (I.. ): Length of the cylindrical or prismatic portion of the test piece on which elongation shall be measured. In particular, a distinction is made between: 4.1.1 original gauge length (Lo ): Gauge length before application of force. 4.1.2 final gauge length 4.2 (l~lJ): Gauge length after rupture of the test piece (see 11.1). parallel length (L c ) : Parallel portion of the reduced section of the test piece. NOTE The concept of parallel length is replaced by the concept of distance between grips for non-machined test pieces. 4.3 elongation: Increase in the original gauge length (Lo ) at any moment during the test. percentage elongation: Elongation expressed as a percentage of the original gauge length (Lo ). 4.4 4.4.1 percentage permanent elongation: Increase in the original gauge length of a test piece after removal of a specified stress (see 4.9), expressed as a percentage of the original gauge length (La). 4.4.2 percentage elongation after fracture (A): Permanent elongation of the gauge length after fracture (l.. u - 1.10)' expressed as a percentage of the original ga"
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.1608.2005",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_800_2007",
@@ -487,7 +795,46 @@
         "structural steel code",
         "steel design code"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "77.140.01 0",
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "1 The composition of this standard the following publications have also been considered: Steel structures (second edition), Standards Australia (Standards Association of Australia), Homebush, NSW 2140, Structural use of steelwork in buildings: Code of practice for design in simple and continuous construction: Hot rolled sections, British Standards Institution, London. Limit states design of steel structures, Canadian Standards Association, Rexdale (Toronto), Ontario, Canada M9W 1R3. Eurocode 3: Design of steel structures: General rules and rules for buildings of the Committee responsible for the formulation of this standard is given in Annex J. For the purpose of deciding whether a particular requirement of this standard, is complied with, the final value, observed or calculated, expressing the result of a test or analysis, shall be rounded off in accordance with IS 2:1960 `Rules for rounding off numerical values (revised)'. The number of significant places retained in the rounded off value should be the same as that of the specified value in this standard. 1S 800:"
+        },
+        {
+          "kind": "body",
+          "text": "1 GENERAL scope References Terminology Symbols Units Standard Dimensions, Form and Weight Plans and Drawings Convention for Member Axes 1 1 1 1 5 11 11 11 12 12 12 12 12 15 15 15"
+        },
+        {
+          "kind": "body",
+          "text": "7 General Structural Steel Rivets Bolts, Nuts and Washers SteeI Casting Welding Consumable Other Materials DESIGN SECTION"
+        },
+        {
+          "kind": "body",
+          "text": "4 Basis for Design Loads and Forces Erection Loads Temperature Effects Load Combinations Geometrical Properties Classification of Cross-Sections Maximum Effective Slenderness Ratio Resistance to Horizontal Forces Expansion Joints"
+        },
+        {
+          "kind": "body",
+          "text": "4 METHODS OF STRUCTURAL Methods of Determining Action Effects Forms of Construction Assumed for Structural Analysis Assumptions in Analysis Elastic Analysis Plastic Analysis Frame Buckling Analysis"
+        },
+        {
+          "kind": "body",
+          "text": "5 LIMIT STATE DESIGN Basis for Design Limit State Design Actions Strength Factors Governing the Ultimate Strength Limit State of Serviceability"
+        },
+        {
+          "kind": "body",
+          "text": "6 DESIGN Tension Design Design Design OF TENSION MEMBERS Members Strength Due to Yielding of Gross Section Strength Due to Rupture of Critical Section Strength Due to Block Shear i IS 800:"
+        },
+        {
+          "kind": "body",
+          "text": "7 DESIGN OF COMPRESS1ON MEMBERS 34 34 35 46 46 47 48 50 52 52 52 52 54 59 60 63 65 69 69 69 69 69 69 70 73 73 73 74 76 78 81 82 82 82 82 83 83 84 84 84 84 85 85"
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.800.2007",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_302_1_2008",
@@ -564,9 +911,9 @@
       "id": "IS_13252_1_2010",
       "number": "IS 13252 (Part 1)",
       "edition_year": 2010,
-      "title": "Information Technology Equipment — Safety, Part 1: General Requirements",
+      "title": "Information Technology Equipment — Safety",
       "scope": "General safety requirements for information technology equipment including computers and peripherals.",
-      "committee": "LITD 8",
+      "committee": "LITD 16",
       "department": "Electronics and Information Technology",
       "status": "active",
       "superseded_by": null,
@@ -592,7 +939,46 @@
         "desktop computer",
         "printer safety"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "33.020; 35.260",
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "2005 Hkkjrh; ekud lwpuk izkS|ksfxdh miLdj � nwljk iqujh{k.k � -- lqj{kk Hkkx 1 lkekU; vis{kk,� Indian Standard INFORMATION TECHNOLOGY EQUIPMENT -- SAFETY PART"
+        },
+        {
+          "kind": "body",
+          "text": "0 Principles of safety ....................................................................................................... xii 0.1 0.2 0.3 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7 2 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9"
+        },
+        {
+          "kind": "body",
+          "text": "3 General principles of safety ................................................................................. xii Hazards .............................................................................................................. xiii Materials and components .................................................................................. xvii Scope.................................................................................................................. .."
+        },
+        {
+          "kind": "body",
+          "text": "1 Definitions ........................................................................................................... .."
+        },
+        {
+          "kind": "body",
+          "text": "20 Components ........................................................................................................ ."
+        },
+        {
+          "kind": "body",
+          "text": "25 Power interface ................................................................................................... ."
+        },
+        {
+          "kind": "body",
+          "text": "41 SELV circuits .................................................................................................... ....."
+        },
+        {
+          "kind": "body",
+          "text": "50 TNV circuits....................................................................................................... . .."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.13252.1.2010",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_15885_2_1_2018",
@@ -632,9 +1018,9 @@
       "id": "IS_16102_1_2012",
       "number": "IS 16102 (Part 1)",
       "edition_year": 2012,
-      "title": "Self-Ballasted LED Lamps, Part 1: Performance Requirements",
-      "scope": "Performance test methods and requirements for self-ballasted LED lamps.",
-      "committee": "LITD 26",
+      "title": "Self-ballasted LED Lamps for General Lighting Services",
+      "scope": "This standard (Part 1) specifies the safety and interchangeability requirements, together with the test methods and conditions, required to show compliance of LED lamps with integrated means for stable operation (self-ballasted LED lamps), intended for domestic and similar general lighting purposes, having, a) a rated wattage up to 60 W; b) a rated voltage of d.c. supplies up to 250 V or a.c. supplies up to 1 000 V at 50 Hz; and c) caps according to Table 1. Recommendations for batch testing are given in Annex C of IS 16103 (Part 1) : 2012 `LED modules for general lighting: Part 1 Safety requirements'. NOTES 1 Where in this standard the term \"lamp(s)\" is used, it is understood to stand for \"self-ballasted LED lamp(s)\", except where it is obviously assigned to other types of lamps. 2 Higher wattage lamp is under consideration. IS No. 12063 : 1987 15518 (Part 1) : 2004 15687 (Part 1) : 2006 15885 (Part 1) : 2011 16101 : 2012 16102 (Part 2) : 2012 16103 (Part 1) : 2012 16108 : 2012 Annex A provides an overview of systems composed of LED system and control gear.",
+      "committee": "ETD 23",
       "department": "Electronics and Information Technology",
       "status": "active",
       "superseded_by": null,
@@ -642,14 +1028,57 @@
       "amendments": [],
       "allied": [],
       "qco": null,
-      "data_confidence": "medium",
+      "data_confidence": "high",
       "aliases": [
         "LED bulb performance",
         "LED lamp performance",
         "LED bulb",
         "lumen output"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "29.140.99",
+      "chunks": [
+        {
+          "kind": "scope",
+          "text": "This standard (Part 1) specifies the safety and interchangeability requirements, together with the test methods and conditions, required to show compliance of LED lamps with integrated means for stable operation (self-ballasted LED lamps), intended for domestic and similar general lighting purposes, having, a) a rated wattage up to 60 W; b) a rated voltage of d.c. supplies up to 250 V or a.c. supplies up to 1 000 V at 50 Hz; and c) caps according to Table 1. Recommendations for batch testing are given in Annex C of IS 16103 (Part 1) : 2012 `LED modules for general lighting: Part 1 Safety requirements'. NOTES 1 Where in this standard the term \"lamp(s)\" is used, it is understood to stand for \"self-ballasted LED lamp(s)\", except where it is obviously assigned to other types of lamps. 2 Higher wattage lamp is under consideration. IS No. 12063 : 1987 15518 (Part 1) : 2004 15687 (Part 1) : 2006 15885 (Part 1) : 2011 16101 : 2012 16102 (Part 2) : 2012 16103 (Part 1) : 2012 16108 : 2012 Annex A provides an overview of systems composed of LED system and control gear."
+        },
+        {
+          "kind": "body",
+          "text": "1 SCOPE This standard (Part 1) specifies the safety and interchangeability requirements, together with the test methods and conditions, required to show compliance of LED lamps with integrated means for stable operation (self-ballasted LED lamps), intended for domestic and similar general lighting purposes, having, a) a rated wattage up to 60 W; b) a rated voltage of d.c. supplies up to"
+        },
+        {
+          "kind": "body",
+          "text": "000 V at 50 Hz; and c) caps according to Table 1. Recommendations for batch testing are given in Annex C of IS 16103 (Part 1) : 2012 `LED modules for general lighting: Part"
+        },
+        {
+          "kind": "body",
+          "text": "1 Where in this standard the term \"lamp(s)\" is used, it is understood to stand for \"self-ballasted LED lamp(s)\", except where it is obviously assigned to other types of lamps."
+        },
+        {
+          "kind": "body",
+          "text": "2 Higher wattage lamp is under consideration. IS No. 12063 : 1987 15518 (Part 1) : 2004 15687 (Part 1) : 2006 15885 (Part 1) : 2011 16101 : 2012 16102 (Part 2) : 2012 16103 (Part 1) : 2012 16108 :"
+        },
+        {
+          "kind": "body",
+          "text": "2 REFERENCES The standards listed below contain provisions which, through reference in this text, constitute provisions of this standard. At the time of publication, the editions indicated were valid. All standards are subject to revision and parties to agreements based on this standard are encouraged to investigate the possibility of applying the most recent editions of the standards listed as follows: IS No. 4261 :"
+        },
+        {
+          "kind": "body",
+          "text": "1 Glow-wire 1 apparatus test procedure Classification of degrees of protection provided by enclosures of electrical equipment Safety requirements for incandescent lamps: Part"
+        },
+        {
+          "kind": "body",
+          "text": "1 General requirements Terms and definitions of LEDs and LED modules in general lighting Self-ballasted LED lamps for general lighting services: Part"
+        },
+        {
+          "kind": "body",
+          "text": "3 TERMINOLOGY For the purpose of this standard the definitions given in IS 16103 (Part 1) and IS 16101 along with the following shall apply."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.16102.1.2012",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_4038_1986",
@@ -657,7 +1086,7 @@
       "edition_year": 1986,
       "title": "LPG Cylinders for Domestic and Commercial Use — Specification",
       "scope": "Prescribes design, material, and testing requirements for liquefied petroleum gas cylinders.",
-      "committee": "CHD 20",
+      "committee": "BDC 3",
       "department": "Chemical Engineering",
       "status": "active",
       "superseded_by": null,
@@ -700,7 +1129,45 @@
         "5 kg",
         "19 kg",
         "47.5 kg"
-      ]
+      ],
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "1986 Indian Standard ( Reaffirmed 2005 ) SPECIFICATION FOR FOOT VALVES FOR WATER WORKS PURPOSES ( Second Revision ) First Reprint NOVEMBER 1991 UDC. 621.646.2:628.1 @ Copyright"
+        },
+        {
+          "kind": "body",
+          "text": "1986 Indian Standard SPECIFICATION FOR FOOT VALVES FOR WATER WORKS PURPOSES ( Second Revision ) Sanitary Appliances and Water Fittings Sectional Committee, BDC"
+        },
+        {
+          "kind": "body",
+          "text": "3 Chairman SHRI K. D. MULEKAR Block B-l 134 `ShitlaKripa 277; L.J. Road, Mahim Bombay 4ooO16/ Members Representing Central Public Health and Environmental Engineering Organisation, New Delhi DEPU-IYADVISER( PHE ) ( Alternare ) SHRI J. R. AGGARWAL Goverdhan Dass P. A. ( Calcutta ), Calcutta SHRI S. K. BANERJEB National Test House, Calcutta SHRI D. K. KANUNGO ( Alternate ) SHRI M. K. BASU Central Glass and Ceramics Research Institute ( CSIR ). Calcutta Department,. Public Health Engineering CHIEF ENGINEER Trivandrum SHRI K. RAMACHANDRAN ( Afternate ) CHIEP ENGINEER ( PPR & D ) Uttar Pradesh Jal Nigam, Lucknow SUPERINTENDING ENGINEER ( Alternate ) HYDRAULIC ENGINEER Municipal Corporation of Greater Bombay, Born bay DEPUTYHYDRAULIC ENGINEER ( Alternate ) _ Engineer-in-Chief's SHRI K. V. KRISHNAMURTHY Branch. Army Headquarters ( Ministry of `Defence ), New Delhi SHRI S. R. KSHIRSAOAR National Environmental Engineering Research Institute ( CSIR ), Nagpur SHRI A. W. DWHPANDE (Alternate) SHRI K. LAKSHMINARAYANAN Hindustan SMpyard Ltd, Visakhapatnam SHRI A. SHARIFP( Alternate ) SHRI S. K. PALHAN Directorate General of Technical Development, New Delhi, SHRI V. N. S. MANIAN( Alternate ) ADVIS"
+        },
+        {
+          "kind": "body",
+          "text": "31 July 1986, after the draft finalized by the Sanitary Appliances and Water Pittings Sectional Committee had been approved by the Civil Engineering Division Council."
+        },
+        {
+          "kind": "body",
+          "text": "2 A foot valve is generally placed at the lower end of the suction pipe of a centrifugal pump to prevent the suction pipe from emptying while the pump is at rest; consequently, when the pump is first started it does not have to exhaust the air from the suction pipe with the result that Foot valve is particularly useprompt starting of the pump is secured. ful when the suction lift or vertical height of the pipe is considerable."
+        },
+        {
+          "kind": "body",
+          "text": "3 This standard was first published in 1967 and subsequently revised in 1978. The revision of this standard has been taken up to incorporate further changes. necessary in the light of the comments received on the standard from the users and the manufacturers and these include modifications relating to: a) addition of 50 and 65mm nominal size flanged-end foot valves, b) materials and their gqdes for various components, and c) procedure for coating and its testing."
+        },
+        {
+          "kind": "body",
+          "text": "4 This standard contains clauses 4.4.1, 4.4.2 and 5.1 which permit the purchaser to use his option for selection to suit his requirements."
+        },
+        {
+          "kind": "body",
+          "text": "5 This.staridard contains clause 7.2 which specifies certain technical information to be supplied by the purchaser at the time of enquiry or placing order."
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.4038.1986",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_8737_1978",
@@ -756,8 +1223,8 @@
       "number": "IS 10500",
       "edition_year": 2012,
       "title": "Drinking Water — Specification",
-      "scope": "Prescribes physical, chemical, and biological quality requirements for water intended for human consumption.",
-      "committee": "CHD 25",
+      "scope": "This standard prescribes the requirements and the methods of sampling and test for drinking water.",
+      "committee": "FAD 25",
       "department": "Chemical Engineering",
       "status": "active",
       "superseded_by": null,
@@ -787,7 +1254,186 @@
         "peene ka pani",
         "pine ka pani"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "13.060.20",
+      "chunks": [
+        {
+          "kind": "scope",
+          "text": "This standard prescribes the requirements and the methods of sampling and test for drinking water."
+        },
+        {
+          "kind": "normative_references",
+          "text": "Refers to: IS 1622, IS 14194 (Part 1), IS 14194 (Part 2), IS 15302, IS 15303, IS 13428, IS 3025 (Part 1), IS 3025 (Part 2), IS 3025 (Part 4), IS 3025 (Part 5), IS 3025 (Part 7), IS 3025 (Part 8), IS 3025 (Part 10), IS 3025 (Part 11), IS 3025 (Part 16), IS 3025 (Part 21), IS 3025 (Part 23), IS 3025 (Part 24), IS 3025 (Part 26), IS 3025 (Part 27), IS 3025 (Part 29), IS 3025 (Part 32), IS 3025 (Part 34), IS 3025 (Part 37), IS 3025 (Part 39), IS 3025 (Part 40)"
+        },
+        {
+          "kind": "body",
+          "text": "2 REFERENCES The standards listed in Annex A contain provisions which through reference in this text, constitute provisions of this standard. At the time of publication, the editions indicated were valid. All standards are subject to revision and parties to agreements based on this standard are encouraged to investigate the possibility of applying the most recent editions of the standards indicated in Annex A."
+        },
+        {
+          "kind": "body",
+          "text": "1 Drinking Water -- Drinking water is water intended for human consumption for drinking and cooking purposes from any source. It includes water (treated or untreated) supplied by any means for human consumption."
+        },
+        {
+          "kind": "body",
+          "text": "4 REQUIREMENTS Drinking water shall comply with the requirements given in Tables 1 to 4. The analysis of pesticide residues given in Table 3 shall be conducted by a recognized laboratory using internationally established test method meeting the residue limits as given in Table 5. Drinking water shall also comply with bacteriological requirements ( see 4.1 ), virological requirements (see 4.2) and biological requirements (see 4.3)."
+        },
+        {
+          "kind": "body",
+          "text": "1 Water in Distribution System Ideally, all samples taken from the distribution system including consumers' premises, should be free from coliform organisms and the following bacteriological quality of drinking water collected in the distribution system, as given in Table 6 is, therefore specified when tested in accordance with IS 1622."
+        },
+        {
+          "kind": "body",
+          "text": "3025 Remarks (1) i) (2) Colour, Hazen units, Max (3) 5 (5) Part 4 (6) Extended to 15 only, if toxic substances are not suspected in absence of alternate sources a) Test cold and when heated b) Test at several dilutions -- Test to be conducted only after safety has been established -- -- ii) iii) iv) v) vi) Odour pH value Taste Turbidity, NTU, Max Total dissolved solids, mg/l, Max Agreeable 6.5-"
+        },
+        {
+          "kind": "body",
+          "text": "16 NOTE -- It is recommended that the acceptable limit is to be implemented. Values in excess of those mentioned under `acceptable' render the water not suitable, but still may be tolerated in the absence of an alternative source but up to the limits indicated under `permissible limit in the absence of alternate source' in col 4, above which the sources will have to be rejected. 1 IS 10500 :"
+        },
+        {
+          "kind": "body",
+          "text": "1 Method of Test, Ref to Remarks (1) (2) (3) 0.03 0.5 0.2 0.7 0.5 75 4.0 250 0.05 1.0 0.2 (5) IS 3025 (Part 55) IS 3025 (Part 34) Annex K of IS 13428 (6) -- -- -- i) Aluminium (as Al), mg/l, Max ii) Ammonia (as total ammonia-N), mg/l, Max iii) Anionic detergents (as MBAS) mg/l, Max iv) Barium (as Ba), mg/l, Max v) Boron (as B), mg/l, Max vi) Calcium (as Ca), mg/l, Max vii) Chloramines (as Cl2), mg/l, Max viii) ix) x) xi) Chloride (as Cl), mg/l, Max Copper (as Cu), mg/l, Max Fluoride (as F) mg/l, Max Free residual chlorine, mg/l, Min xii) Iron (as Fe), mg/l, Max"
+        },
+        {
+          "kind": "body",
+          "text": "3 No relaxation Annex F of IS 13428* -- or IS 15302 IS 3025 (Part 57) -- IS 3025 (Part 40) -- IS 3025 (Part 26)* -- or APHA 4500-Cl G IS 3025 (Part 32) -- IS 3025 (Part 42) -- IS 3025 (Part 60) -- IS 3025 (Part 26) To be applicable only when water is chlorinated. Tested at consumer end. When protection against viral infection is required, it should be minimum 0.5 mg/l IS 3025 (Part 53) Total concentration of manganese (as Mn) and iron (as Fe) shall not exceed 0.3 mg/l -- Total concentration of manganese (as Mn) and iron (as Fe) shall not exceed 0.3 mg/l Clause 6 of IS 3025 -- (Part 39) Infrared partition method IS 3025 (Part 34) -- IS 3025 (Part 43) -- IS 3025 (Part 56) or -- IS 15303* Annex J of IS 13428 -- IS 3025 (Part 24) May be extended to 400 provided that Magnesium does not exceed 30 IS 3025 (Part 29) -- IS 3025 (Part 23) -- IS 3025 (Part 21) IS 3025 (Part 49) -- -- IS 3025 (Part 46) IS 3025 (Part 59) xiii) Magnesium (as Mg), mg/l, Max xiv) Manganese (as Mn), mg/l, Max 30 0.1 100 0.3 xv) Mineral oil, mg/l, Max"
+        }
+      ],
+      "referred_standards": [
+        {
+          "number": "1622",
+          "part": null,
+          "year": 1981
+        },
+        {
+          "number": "14194",
+          "part": "1",
+          "year": 1994
+        },
+        {
+          "number": "14194",
+          "part": "2",
+          "year": 1994
+        },
+        {
+          "number": "15302",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "15303",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "13428",
+          "part": null,
+          "year": 2003
+        },
+        {
+          "number": "3025",
+          "part": "1",
+          "year": 1987
+        },
+        {
+          "number": "3025",
+          "part": "2",
+          "year": 2002
+        },
+        {
+          "number": "3025",
+          "part": "4",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "5",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "7",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "8",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "10",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "11",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "16",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "21",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "23",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "24",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "26",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "27",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "29",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "32",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "34",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "37",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "39",
+          "year": 1989
+        },
+        {
+          "number": "3025",
+          "part": "40",
+          "year": 1991
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.10500.2012",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_10500_1991",
@@ -875,7 +1521,7 @@
       "id": "IS_14543_2004",
       "number": "IS 14543",
       "edition_year": 2004,
-      "title": "Packaged Natural Mineral Water — Specification (Earlier Edition)",
+      "title": "Packaged Drinking Water (other Than Packaged Natural Mineral Water)specification",
       "scope": "Superseded edition of packaged mineral water requirements.",
       "committee": "FAD 14",
       "department": "Food and Agriculture",
@@ -893,7 +1539,272 @@
         "packaged water",
         "bottled water"
       ],
-      "designations": []
+      "designations": [],
+      "ics": "13.060.20",
+      "chunks": [
+        {
+          "kind": "normative_references",
+          "text": "Refers to: IS 3025, IS 3025 (Part 4), IS 3025 (Part 5), IS 3025 (Part 8), IS 3025 (Part 10), IS 3025 (Part 11), IS 3025 (Part 16), IS 3025 (Part 23), IS 3025 (Part 24), IS 3025 (Part 26), IS 3025 (Part 27), IS 3025 (Part 29), IS 3025 (Part 32), IS 3025 (Part 34), IS 3025 (Part 37), IS 3025 (Part 47), IS 3025 (Part 48), IS 3025 (Part 49), IS 2003 (Part 55), IS 2003 (Part 56), IS 4905, IS 5402, IS 5403, IS 12252, IS 1976 (Part 2), IS 13428, IS 14194 (Part 1), IS 14194 (Part 3), IS 1976 (Part 2), IS 14971, IS 15185, IS 9845, IS 15186, IS 10142, IS 15187, IS 15188, IS 10146, IS 15302, IS 10151, IS 15303, IS 10500, IS 10910, IS 15410, IS 4543"
+        },
+        {
+          "kind": "body",
+          "text": "4 HYGIENIC CONDITIONS This standard prescribesthe requirements and methods of sampling and test for drinking water (other than natural mineral water) offered for sale in packaged form."
+        },
+        {
+          "kind": "body",
+          "text": "2 REFERENCES It shall be collected,processed, handled,packagedand marketed in accordance with the hygienic practices given in Annex B. A check list for good hygienic practices and food safety system for packaged water processing units given in Annex C."
+        },
+        {
+          "kind": "body",
+          "text": "1 Microbiological Requirements The standards given in Annex A contain provisions which through reference in this text, constitute provisions of this standard. At the time of publication, the editions indicated were valid. All standards are subject to revision and parties to agreementsbased on this standard are encouraged to investigate the possibilityof applying the most recent editions of the standards."
+        },
+        {
+          "kind": "body",
+          "text": "1 Escherichia coli (or thennotolerantbacteria)shall be absent in any 250 ml sample when tested in accordancewith the method given in IS 5887 (Part 1)* or IS 15185."
+        },
+        {
+          "kind": "body",
+          "text": "2 Coliform, bacteria shall be absent in any 250 ml sample when tested in accordance with the method given in IS 5401 (Part 1)* or IS 15185."
+        },
+        {
+          "kind": "body",
+          "text": "3 Faecal streptococci and Staphylococcus aureus, For the purpose of this standard, the following definitions shall apply."
+        },
+        {
+          "kind": "body",
+          "text": "1 Drinking Water (Other than Natural Mineral Water) - Drinking water means water from any potable water source including public drinking water supply systems (see IS 10500)."
+        },
+        {
+          "kind": "body",
+          "text": "2 Packaged Drinking Water (Other than Packaged Natural Mineral Water) - Packaged shall be absent in any 250 ml sample when tested in accordancewith the method given in IS 5887 (Part 2)* Streptococci (EnterococcI) may also be tested by the method specified in IS 15186."
+        }
+      ],
+      "referred_standards": [
+        {
+          "number": "3025",
+          "part": null,
+          "year": 1964
+        },
+        {
+          "number": "3025",
+          "part": "4",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "5",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "8",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "10",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "11",
+          "year": 1983
+        },
+        {
+          "number": "3025",
+          "part": "16",
+          "year": 1984
+        },
+        {
+          "number": "3025",
+          "part": "23",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "24",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "26",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "27",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "29",
+          "year": 1986
+        },
+        {
+          "number": "3025",
+          "part": "32",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "34",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "37",
+          "year": 1988
+        },
+        {
+          "number": "3025",
+          "part": "47",
+          "year": 1994
+        },
+        {
+          "number": "3025",
+          "part": "48",
+          "year": 1994
+        },
+        {
+          "number": "3025",
+          "part": "49",
+          "year": 1994
+        },
+        {
+          "number": "2003",
+          "part": "55",
+          "year": 2003
+        },
+        {
+          "number": "2003",
+          "part": "56",
+          "year": 2003
+        },
+        {
+          "number": "4905",
+          "part": null,
+          "year": 1968
+        },
+        {
+          "number": "5402",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "5403",
+          "part": null,
+          "year": 1999
+        },
+        {
+          "number": "12252",
+          "part": null,
+          "year": 1987
+        },
+        {
+          "number": "1976",
+          "part": "2",
+          "year": 1976
+        },
+        {
+          "number": "13428",
+          "part": null,
+          "year": 1998
+        },
+        {
+          "number": "14194",
+          "part": "1",
+          "year": 1994
+        },
+        {
+          "number": "14194",
+          "part": "3",
+          "year": 1999
+        },
+        {
+          "number": "1976",
+          "part": "2",
+          "year": 1994
+        },
+        {
+          "number": "14971",
+          "part": null,
+          "year": 2001
+        },
+        {
+          "number": "15185",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "9845",
+          "part": null,
+          "year": 1998
+        },
+        {
+          "number": "15186",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "10142",
+          "part": null,
+          "year": 1999
+        },
+        {
+          "number": "15187",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "15188",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "10146",
+          "part": null,
+          "year": 1982
+        },
+        {
+          "number": "15302",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "10151",
+          "part": null,
+          "year": 1982
+        },
+        {
+          "number": "15303",
+          "part": null,
+          "year": 2002
+        },
+        {
+          "number": "10500",
+          "part": null,
+          "year": 1991
+        },
+        {
+          "number": "10910",
+          "part": null,
+          "year": 1984
+        },
+        {
+          "number": "15410",
+          "part": null,
+          "year": 2003
+        },
+        {
+          "number": "4543",
+          "part": null,
+          "year": 2004
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.14543.2004",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_4151_2015",
@@ -960,7 +1871,45 @@
         "site helmet",
         "worker helmet"
       ],
-      "designations": []
+      "designations": [],
+      "chunks": [
+        {
+          "kind": "body",
+          "text": "IS : 2925 - 1984 (Reaffirmed 2010) REAFFIRMED 2005 I � Indian Standard ~ SPECIFICATION FOR INDUSTRIAL SAFETY HELMETS (Second Revision) Fourth Reprint JULY 2007 (Including Amendment Nos. 1,2, 3 & 4) UDC 614.891.1 : 658.382.3 � Copyright"
+        },
+        {
+          "kind": "body",
+          "text": "1984 Indian Standard SPECIFICATION FOR INDUSTRIAL SAFETY HELMETS ( Second Revision) Fire Figln ing Sectional Corn m it ter-, SIlHf BI)(~"
+        },
+        {
+          "kind": "body",
+          "text": "110022 SJJHl Member j A. N. AHLU\\V\",LI Rf!'rt sentill.~ \\ 'I he Alltrnate) Institution New Delhi of Fire Engineers (India), SHRl B. R . .t\\1EIIT,\\ ( SHRI S. R. BANS.\\L CHIEF Fin!'; ()F~'ICF:H, SHItl R. K. IhIAHP\\vA.J ( Su ur K. K. DVUTY DAS GUP'rA St ce] Aut hor i t y of India ( liok a ro Stf'p! Plant), Bokaro Steel Cit\\' Municipal Corporario� of f)pJhi, De-lhi Alternate) West Bengal Fire Services. ( �ivernrnent of West Bengal, Calcutta {NRPE:C'rOH GENKRA L Ministry of Ra ilwa v s (RPSE) ASSiSTANT SECURITY ()YV1CKH. ( FIRM ), NORTHEH N RAIL'\" AY ( Alternate) Ministry of Defence ( 1)(;1 ) Sn u r V. P. SHl{I DE\\VAN Lrr-CoIJ V. R. R. R. BAN All ATI ( DHORLEY DlIt:E('TOR ( FIRl': SERVICEH ) Alternate ) Hhabha Atomic Research Centre, Bombay Home (Police) Department, Gov ernment i\\ndhra Pradesh. Hyderabad Horne Department (Fire Se-rv ir c }, of DEPUTY Dll{J;:CTOH (FII{E (~OVi'rnTnent SER VleER ) ( Alternate) DJHECTOR GENERAL of Tamil Nadu, Madras Dl'a~UTY DIHECTOR ( FIRE AnvIsER SHRI A. K. GUP'l'A SHftl Alternate) Ministry of Home Affairs Central Building Research Institutr( CSIR ), J. S. JAM~HJ-~D.lJ Roorkee Steelage Industries Li m i ved Bombay Minimax Div ision }, SRRI C. GHAN.�\\R A,J"
+        },
+        {
+          "kind": "body",
+          "text": "5 SHItt S. K. ARORA FIRE ADVI::iEU. SH1U P. P. JAIN SHRI A. P. AOARW AL ( Alumat� ) JOINT DIRECTOR OF MINES SAFETY Directorate General of Mines Safety, Dhanbad SHRI RAMBl8D KAPOOR New Steel Bird Industries, New Delhi SURI A:~HOK KAl'OOH, ( Alurnau ) Bureau of Police Research and Development, New Delhi Ministry of Home Affairs The Mines Service Corporation, Asansol ( Cvntinu,d on Pill' 16 )"
+        },
+        {
+          "kind": "body",
+          "text": "1984 SPECIFICATION FOR INDUSTRIAL SAFETY HELMETS (Second Revision) (Page 5~ clause 5.1, line 11) following words after the word~ch': 'of the two' - Add the (Page 5 clause 5. 1 , las t line) following words after the word 'shall': J Add the 'not less than 180 mm 2 and' 2) Add the (Page 15, clause H-2.1, line following words after the word 'of': 'sodium chloride in' (BDC 22) AMENDMENT NO."
+        },
+        {
+          "kind": "body",
+          "text": "1984 SPECIFICATION FOR INUUSTRIAL SAFETY HELMETS ( Second Revision) Insert the following at the end of sub-clause: (Page 4, clause 2.3.1 ) - 'and the hC3.dband may or may not he. continuous when Napestrap is provided.' (CED 22) AMENDMENT NO."
+        },
+        {
+          "kind": "body",
+          "text": "1984 SPECIFICATION FOR INDUSTRIAL SAFETY HELMETS ( Second Revision) (Page 3, clause 0.4 ) (Page 5, clause 4.1) Delete clause 0.4. Substitute the following for the existing: 'Helmets shall be in sizes 520, 530, 540, 550, 560, 570, 580, 590 and 600 mrn. These sizes may be generated out of one or more shells or one of more head bands. The size adjustment range shall be clearly marked on the helmet.' (Page 9, clause lO.I(b)] ( Page 10, Appendix A) Substitute 'Range/Size' for 'Size'. Delete. Substitute following Appendix G for the ( Page 13, Appendix G ) existing: APPENDIX G ( Clause 8.3 ) METHOD OF TESTING G-I SAMPLE G-I.l The samples for testing shall be selected as given in 9.1. FI~AMMABILITYRESIS1'ANCE G-"
+        },
+        {
+          "kind": "body",
+          "text": "1 Burner shall be operated with the valve so as to get a flame height of 150 rom. Satisfactory operation of burner shall be checked by inserting in the flame, the bare copper wire of 0.71 mm diameter having a free length of not less than 100 mm in position normally occupied by low edge of the test piece, that is, 50 mm above the burner and reaching farther edge of the flame. The wire should not take more than 6 seconds to melt. ] , Amend No.3 to IS 29Z5 : 1984 G-"
+        }
+      ],
+      "source": {
+        "item_id": "gov.in.is.2925.1984",
+        "mirror": "law.resource.org/pub/in/bis"
+      }
     },
     {
       "id": "IS_9873_1_2019",

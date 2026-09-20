@@ -1,7 +1,14 @@
+import os
 import sys
 from pathlib import Path
 
+# Every TestClient request shares one client host, so the production rate limit
+# would throttle the suite itself. Raised before app import; the limiter's own
+# behaviour is tested directly in test_limits.py.
+os.environ.setdefault("RATE_LIMIT_REQUESTS", "1000000")
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # repo root, for data_pipeline
 
 import pytest
 
@@ -110,6 +117,31 @@ SAMPLE_QCO_ORDERS = [
         "notified": "2021-01",
     }
 ]
+
+
+class StubExplainer:
+    """Deterministic, network-free stand-in for ExplanationGenerator so the API
+    tests need no internet access or live Groq key."""
+
+    available = True
+
+    def generate(self, standard, match, certification=None):
+        return {
+            "explanation": f"stub explanation for {standard.get('number')}",
+            "source": "stub",
+        }
+
+
+@pytest.fixture(scope="session")
+def client():
+    """Shared across the whole session -- app startup builds the real embedding
+    index, which is far too expensive to repeat per module."""
+    from fastapi.testclient import TestClient
+    from app.main import app, _state
+
+    with TestClient(app) as c:
+        _state["explainer"] = StubExplainer()
+        yield c
 
 
 @pytest.fixture

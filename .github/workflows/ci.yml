@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      # The embedding model is ~470MB and every test session loads it, so
+      # caching it is the difference between a 2-minute run and a 6-minute one.
+      - name: Cache sentence-transformers model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-paraphrase-multilingual-MiniLM-L12-v2
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install browser for E2E tests
+        working-directory: backend
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run test suite
+        working-directory: backend
+        run: python -m pytest tests/ -q
+        # No GROQ_API_KEY is set: the explanation layer must degrade to its
+        # template fallback, and the suite must pass without network access.
+
+      - name: Run retrieval benchmark
+        working-directory: backend
+        run: python -m eval.run_eval --json eval_results.json
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrieval-benchmark
+          path: backend/eval_results.json
+          if-no-files-found: ignore
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if an API key was committed
+        run: |
+          if git grep -nE 'gsk_[A-Za-z0-9]{20,}' -- . ':!*.yml'; then
+            echo "::error::A Groq API key appears to be committed."
+            exit 1
+          fi
+          if git ls-files --error-unmatch backend/.env 2>/dev/null; then
+            echo "::error::backend/.env is tracked and must not be."
+            exit 1
+          fi
+          echo "No secrets detected."

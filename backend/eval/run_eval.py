@@ -20,12 +20,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.core.retrieval import StandardsIndex
 
 GOLD_PATH = Path(__file__).parent / "gold_queries.jsonl"
+HELDOUT_PATH = Path(__file__).parent / "heldout_queries.jsonl"
 DATA_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "standards.json"
 K_VALUES = (1, 3, 5)
 
 
-def load_gold():
-    with GOLD_PATH.open(encoding="utf-8") as fh:
+def load_gold(path: Path = GOLD_PATH):
+    with path.open(encoding="utf-8") as fh:
         return [json.loads(line) for line in fh if line.strip()]
 
 
@@ -71,17 +72,24 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", dest="json_out", help="write full results to this path")
     parser.add_argument("--show-misses", action="store_true", help="print every miss")
+    parser.add_argument("--heldout", action="store_true",
+                        help="use the held-out set (queries written to avoid every alias "
+                             "string, so it measures generalisation rather than lexicon recall)")
+    parser.add_argument("--gold", help="path to a custom gold set")
     args = parser.parse_args()
+
+    gold_path = Path(args.gold) if args.gold else (HELDOUT_PATH if args.heldout else GOLD_PATH)
 
     standards = json.loads(DATA_PATH.read_text(encoding="utf-8"))["standards"]
     index = StandardsIndex(standards)
     index.build()
 
-    gold = load_gold()
+    gold = load_gold(gold_path)
     rows, per_type = evaluate(index, gold)
 
     overall = summarize(rows)
-    print(f"\nCorpus: {len(standards)} standards | Queries: {overall['n']}\n")
+    print(f"\nCorpus: {len(standards)} standards | Queries: {overall['n']} "
+          f"| Set: {gold_path.name}\n")
     header = f"{'query_type':<14} {'n':>3}  {'R@1':>6} {'R@3':>6} {'R@5':>6} {'MRR':>6}"
     print(header)
     print("-" * len(header))
