@@ -11,22 +11,28 @@
 # The backend belongs on a container host; backend/Dockerfile builds it with
 # the model and embeddings baked in. (Long term, government deployment requires
 # MeitY-empanelled hosting anyway, so Vercel was always a demo stopgap here.)
+#
+# EVERY PATTERN IS ROOT-ANCHORED WITH A LEADING SLASH. These are gitignore
+# semantics: a bare `data/` matches a directory named `data` at ANY depth, so
+# it silently deleted `frontend/src/data/` (mock.js, catalogue.js) and the
+# build failed with 21 unresolved imports. Do not remove the slashes.
 
-backend/
-data_pipeline/
-data/
-services/
-standards-retrieval/
-app/
-api/
-tests/
-scripts/
-scratch/
-ingest.py
-requirements.txt
-Dockerfile
-docker-compose.yml
-Solution_details/
-docs/
-*.md
-!frontend/README.md
+/backend/
+/data_pipeline/
+/data/
+/services/
+/standards-retrieval/
+/app/
+/api/
+/tests/
+/scripts/
+/scratch/
+/ingest.py
+/requirements.txt
+/Dockerfile
+/docker-compose.yml
+/Solution_details/
+/docs/
+
+# Root-level docs only; frontend/README.md and any nested docs stay.
+/*.md
