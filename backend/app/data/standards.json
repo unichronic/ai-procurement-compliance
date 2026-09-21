@@ -134782,8 +134782,8 @@
       "id": "IS_8737_1978",
       "number": "IS 8737",
       "edition_year": 1978,
-      "title": "Periodic Inspection and Testing of LPG Cylinders in Service",
-      "scope": "Guidance on inspection intervals and testing procedures for LPG cylinders already in service.",
+      "title": "Valve Fittings for Use with Liquefied Petroleum Gas (LPG) Cylinders",
+      "scope": "Specifies requirements for valve fittings used with liquefied petroleum gas cylinders.",
       "committee": "CHD 20",
       "department": "Chemical Engineering",
       "status": "active",
@@ -134794,18 +134794,20 @@
       "qco": null,
       "data_confidence": "medium",
       "aliases": [
-        "cylinder retesting",
-        "LPG cylinder inspection",
-        "cylinder periodic testing"
+        "cylinder valve",
+        "LPG valve",
+        "gas valve",
+        "regulator valve"
       ],
-      "designations": []
+      "designations": [],
+      "_correction": "Title and scope were hand-authored as 'Periodic Inspection and Testing of LPG Cylinders' and are wrong; corrected against archive records for IS 8737:1995 and 2017."
     },
     {
       "id": "IS_3196_1_1991",
       "number": "IS 3196 (Part 1)",
       "edition_year": 1991,
-      "title": "LPG Cylinder Valves, Part 1: Specification",
-      "scope": "Design and performance requirements for valves fitted to LPG cylinders.",
+      "title": "Welded Low Carbon Steel Cylinders Exceeding 5 Litre Water Capacity for LPG, Part 1: Specification",
+      "scope": "Specifies requirements for welded low carbon steel cylinders exceeding 5 litre water capacity for the storage and transport of liquefied petroleum gas.",
       "committee": "CHD 20",
       "department": "Chemical Engineering",
       "status": "active",
@@ -134820,12 +134822,13 @@
       },
       "data_confidence": "medium",
       "aliases": [
-        "cylinder valve",
-        "LPG valve",
-        "gas valve",
-        "regulator valve"
+        "LPG cylinder",
+        "gas cylinder",
+        "welded steel cylinder",
+        "domestic cylinder"
       ],
-      "designations": []
+      "designations": [],
+      "_correction": "Title and scope were hand-authored as 'LPG Cylinder Valves' and are wrong; corrected against seven archive records for IS 3196 Parts 1-4."
     },
     {
       "id": "IS_10500_1991",
