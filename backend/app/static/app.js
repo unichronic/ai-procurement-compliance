@@ -46,6 +46,7 @@ fileInput.addEventListener("change", async () => {
 
   setMode("lint");
   submitBtn.disabled = true;
+  resultsEl.setAttribute("aria-busy", "true");
   resultsEl.innerHTML = "";
   setStatus(`Extracting text from ${file.name}…`);
 
@@ -73,9 +74,12 @@ fileInput.addEventListener("change", async () => {
 
 function setMode(next) {
   mode = next;
-  modeSingleBtn.classList.toggle("active", mode === "single");
-  modeBatchBtn.classList.toggle("active", mode === "batch");
-  modeLintBtn.classList.toggle("active", mode === "lint");
+  for (const [btn, name] of [[modeSingleBtn, "single"], [modeBatchBtn, "batch"], [modeLintBtn, "lint"]]) {
+    const on = mode === name;
+    btn.classList.toggle("active", on);
+    // Screen readers read aria-checked, not a CSS class.
+    btn.setAttribute("aria-checked", on ? "true" : "false");
+  }
   textEl.placeholder = PLACEHOLDERS[mode];
 
   const isLint = mode === "lint";
@@ -109,6 +113,7 @@ async function runSearch() {
   const topK = Math.max(1, Math.min(15, parseInt(topKEl.value, 10) || 5));
 
   submitBtn.disabled = true;
+  resultsEl.setAttribute("aria-busy", "true");
   resultsEl.innerHTML = "";
   setStatus({
     single: "Searching locally…",
@@ -132,6 +137,7 @@ async function runSearch() {
     setStatus(err.message || "Something went wrong talking to the backend.", true);
   } finally {
     submitBtn.disabled = false;
+    resultsEl.setAttribute("aria-busy", "false");
   }
 }
 

@@ -173,3 +173,75 @@ def test_file_upload_audits_document(page, tmp_path):
 
     assert "Superseded citation" in page.inner_text("#results")
     assert "characters extracted" in page.inner_text("#status")
+
+
+# -- accessibility -----------------------------------------------------------
+#
+# IS 17802 (Parts 1 and 2) became legally enforceable for ICT products and
+# services on 11 May 2023 via the RPwD Amendment Rules (G.S.R. 359(E)), and
+# GIGW 3.0 requires WCAG 2.1 Level AA. For a tool intended for government
+# officials this is statutory, not polish — so it is tested, not assumed.
+
+def test_all_interactive_controls_have_accessible_names(page):
+    """WCAG 4.1.2 / 3.3.2. A placeholder is not a label: the main textarea and
+    the file input were both unnamed, so a screen-reader user could not tell
+    what the primary input was for."""
+    unnamed = page.eval_on_selector_all(
+        "button,input,textarea,select",
+        """els => els
+            .map(e => ({id: e.id, name: (
+                e.getAttribute('aria-label')
+                || (e.labels && e.labels.length ? e.labels[0].innerText : '')
+                || e.innerText || '').trim()}))
+            .filter(c => !c.name)""",
+    )
+    assert unnamed == [], f"controls without an accessible name: {unnamed}"
+
+
+def test_results_and_status_are_live_regions(page):
+    """WCAG 4.1.3. Findings arrive asynchronously; without a live region the
+    entire output of this application is silent to a screen reader."""
+    assert page.get_attribute("#status", "aria-live") == "polite"
+    assert page.get_attribute("#status", "role") == "status"
+    assert page.get_attribute("#results", "aria-live") == "polite"
+
+
+def test_mode_toggle_exposes_selection_state(page):
+    """Three loose buttons cannot convey that the modes are mutually exclusive
+    or which one is active. A radiogroup can."""
+    assert page.locator("[role=radiogroup]").count() == 1
+    assert page.locator("[role=radio]").count() == 3
+
+    page.click("#mode-lint")
+    states = page.eval_on_selector_all(
+        "[role=radio]", "e=>e.map(x=>[x.id, x.getAttribute('aria-checked')])")
+    assert ["mode-lint", "true"] in [list(s) for s in states]
+    assert sum(1 for _, checked in states if checked == "true") == 1
+
+
+def test_heading_structure_and_skip_link(page):
+    """WCAG 1.3.1 / 2.4.1 — one h1, section headings under it, and a way past
+    the header for keyboard users."""
+    tags = page.eval_on_selector_all("h1,h2,h3", "e=>e.map(x=>x.tagName)")
+    assert tags[0] == "H1"
+    assert tags.count("H1") == 1
+    assert "H2" in tags
+    assert page.locator(".skip-link").count() == 1
+
+
+def test_focus_indicator_is_explicit(page):
+    """WCAG 2.4.7. The browser default 1px outline is invisible against this
+    dark panel background."""
+    page.keyboard.press("Tab")
+    outline = page.evaluate(
+        "()=>{const s=getComputedStyle(document.activeElement);"
+        "return {w: s.outlineWidth, c: s.outlineColor}}")
+    assert outline["w"] not in ("0px", "medium"), f"no explicit focus outline: {outline}"
+
+
+def test_results_region_reports_busy_state(page):
+    page.click("#mode-lint")
+    page.click("#sample-btn")
+    page.click("#submit-btn")
+    page.wait_for_function("document.querySelectorAll('.finding').length >= 6", timeout=60000)
+    assert page.get_attribute("#results", "aria-busy") == "false"

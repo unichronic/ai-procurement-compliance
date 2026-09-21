@@ -7,18 +7,27 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
 <header>
   <h1>Indian Standards Recommendation Engine</h1>
   <p>SIH 2026 · Problem Statement 108 · Bureau of Indian Standards — paste a product description, spec, or tender document and get ranked applicable IS standards, allied standards, version status, and certification requirements. Retrieval runs entirely on this machine; nothing you type here is sent to any external API.</p>
 </header>
-<main>
-  <div class="mode-toggle">
-    <button id="mode-single" class="active">Single query</button>
-    <button id="mode-batch">Tender document (batch)</button>
-    <button id="mode-lint">Audit a draft</button>
+<main id="main">
+  <h2 id="mode-heading">Choose what to do</h2>
+  <!-- Mutually exclusive modes, so a radiogroup rather than three loose
+       buttons: a screen reader must convey that picking one deselects the
+       others, and which is currently active. -->
+  <div class="mode-toggle" role="radiogroup" aria-labelledby="mode-heading">
+    <button id="mode-single" class="active" role="radio" aria-checked="true">Single query</button>
+    <button id="mode-batch" role="radio" aria-checked="false">Tender document (batch)</button>
+    <button id="mode-lint" role="radio" aria-checked="false">Audit a draft</button>
   </div>
 
-  <textarea id="query-text" placeholder="e.g. supply of galvanized structural steel sections for building frame, IS grade Fe 500"></textarea>
+  <h2 class="visually-hidden">Input</h2>
+  <label for="query-text" id="query-label">Procurement specification, tender text, or product description</label>
+  <textarea id="query-text" aria-describedby="query-hint"
+            placeholder="e.g. supply of galvanized structural steel sections for building frame, IS grade Fe 500"></textarea>
+  <p id="query-hint" class="field-hint">Paste a draft specification to audit it, or describe an item to find applicable standards.</p>
 
   <div class="controls">
     <label for="top-k" id="top-k-label">Results per item</label>
@@ -26,11 +35,19 @@
     <button id="submit-btn" class="primary">Find applicable standards</button>
     <button id="sample-btn" class="secondary">Load sample draft</button>
     <button id="upload-btn" class="secondary">Upload PDF/DOCX…</button>
+    <!-- Labelled even though visually hidden: it is reachable and operable, so
+         it needs an accessible name. -->
+    <label for="file-input" class="visually-hidden">Upload a tender document (PDF, DOCX or text)</label>
     <input type="file" id="file-input" accept=".pdf,.docx,.txt,.md" hidden />
   </div>
 
-  <div id="status" class="status"></div>
-  <div id="results"></div>
+  <!-- Results arrive asynchronously. Without a live region a screen-reader
+       user is told nothing at all when findings appear, which for this app
+       means the entire output is silent. WCAG 2.1 SC 4.1.3. -->
+  <div id="status" class="status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <h2 class="visually-hidden">Results</h2>
+  <div id="results" aria-live="polite" aria-busy="false"></div>
 </main>
 
 <script src="app.js"></script>

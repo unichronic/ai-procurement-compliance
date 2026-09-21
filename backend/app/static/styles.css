@@ -361,3 +361,73 @@ button.secondary {
   font-size: 0.9rem;
   margin-top: 24px;
 }
+
+/* --- Accessibility (WCAG 2.1 AA / IS 17802) --- */
+
+/* SC 2.4.1: let keyboard users jump the header. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: #061422;
+  padding: 10px 16px;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+  font-weight: 600;
+}
+.skip-link:focus { left: 0; }
+
+/* Available to assistive tech, not painted. Not display:none, which would
+   remove it from the accessibility tree entirely. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.controls label { display: inline; margin-bottom: 0; }
+
+.field-hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 6px 0 0;
+}
+
+/* SC 2.4.7: the browser default outline disappears against a dark panel, so
+   the focus indicator is explicit and high-contrast. */
+:focus-visible {
+  outline: 3px solid #ffd166;
+  outline-offset: 2px;
+}
+
+/* SC 1.4.11: non-text contrast — the selected mode must be distinguishable by
+   more than colour alone, so it also carries a weight and underline change. */
+.mode-toggle button[aria-checked="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  background: #172633;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* SC 1.4.12: don't break when a user overrides spacing. */
+body { word-break: break-word; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

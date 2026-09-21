@@ -8,7 +8,19 @@ def _build(sample_standards):
 
 
 def test_tokenize_ascii():
-    assert _tokenize("IS 2062 Steel-Ropes!") == ["is", "2062", "steel", "ropes"]
+    assert _tokenize("IS 2062 Steel-Ropes!") == ["2062", "steel", "ropes"]
+
+
+def test_tokenize_drops_harmful_stopwords():
+    """Not merely useless — harmful. "protective headgear for labourers at
+    building sites" matched "Protective Rubber Canvas Boots for Miners" partly
+    on {for, at}, so BM25 voted for boots on two prepositions."""
+    assert _tokenize("supply of helmets for the site as per specification") == \
+        ["helmets", "site"]
+
+
+def test_tokenize_can_keep_stopwords_when_asked():
+    assert "of" in _tokenize("supply of helmets", drop_stopwords=False)
 
 
 def test_tokenize_non_latin_script_yields_no_tokens():

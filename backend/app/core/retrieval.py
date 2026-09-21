@@ -53,9 +53,42 @@ USE_EMBEDDING_CACHE = os.environ.get("USE_EMBEDDING_CACHE", "1") != "0"
 # (see README) -- undamped max-pool measurably regressed overall R@1.
 CHUNK_SCORE_DAMPING = float(os.environ.get("CHUNK_SCORE_DAMPING", "0.88"))
 
+# Relative weight of the lexical channel against the semantic one in RRF.
+# Equal weighting (1.0) let BM25 outvote a correct semantic result on the
+# strength of a generic adjective: the right standard sat at semantic rank 3
+# and fused rank 25. Lexical matching earns its place on exact IS numbers and
+# designations, not on adjectives, so it votes at less than parity. Tuned on
+# the held-out set.
+LEXICAL_WEIGHT = float(os.environ.get("LEXICAL_WEIGHT", "0.5"))
 
-def _tokenize(text: str) -> List[str]:
-    return _TOKEN_RE.findall(text.lower())
+
+# Function words plus procurement boilerplate. These are not merely useless,
+# they are harmful: "protective headgear for labourers at building sites"
+# matched "Protective Rubber Canvas Boots for Miners" on {protective, for, at}
+# while the correct "Industrial Safety Helmets" matched only {for, at, building}
+# -- so BM25 voted confidently for boots on the strength of two prepositions.
+# Every procurement query says "supply of", so those carry no information here.
+_STOPWORDS = frozenset("""
+a an the and or of for to in on at by with from as is are be been being
+this that these those it its shall should will would may can must
+supply supplying supplied provide providing provision procurement tender
+item items quantity nos no qty required requirement requirements
+specification specifications standard standards conforming conformity
+as per relevant applicable suitable following above below given
+""".split())
+
+
+def _tokenize(text: str, drop_stopwords: bool = True) -> List[str]:
+    """Content tokens.
+
+    Stopwords are dropped from documents and queries alike so BM25's
+    statistics stay consistent. Dropping them only from the query would leave
+    the corpus term frequencies computed over a different vocabulary.
+    """
+    tokens = _TOKEN_RE.findall(text.lower())
+    if drop_stopwords:
+        return [t for t in tokens if t not in _STOPWORDS]
+    return tokens
 
 
 class StandardsIndex:
@@ -266,7 +299,8 @@ class StandardsIndex:
         for idx in range(len(self.standards)):
             sr = semantic_rank[idx]
             if has_lexical_signal:
-                rrf[idx] = 1.0 / (k + lexical_rank[idx] + 1) + 1.0 / (k + sr + 1)
+                rrf[idx] = (LEXICAL_WEIGHT / (k + lexical_rank[idx] + 1)
+                            + 1.0 / (k + sr + 1))
             else:
                 rrf[idx] = 1.0 / (k + sr + 1)
 
