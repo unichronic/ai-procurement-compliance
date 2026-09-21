@@ -68,3 +68,9 @@ Desktop.ini
 
 # Embedding cache (regenerated from corpus content hash)
 backend/app/.cache/
+
+# Frontend build + test artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/

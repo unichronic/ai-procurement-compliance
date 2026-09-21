@@ -52,6 +52,35 @@ class RetrieveRequest(BaseModel):
     explain: bool = False
 
 
+RELATION_HEADINGS = {
+    "normative_reference": "Normative references",
+    "test_method": "Test methods",
+    "terminology": "Terminology",
+    "safety": "Safety",
+    "installation": "Installation and use",
+    "related_product": "Related products",
+}
+
+RELATION_EXPLANATIONS = {
+    "normative_reference": ("Cited in this standard's own annex; a specification "
+                           "citing this standard normally cites these too."),
+    "test_method": "Defines how conformity with this standard is verified.",
+}
+
+
+def _citation_number(s: Dict[str, Any]) -> str:
+    """Designation including the edition, e.g. "IS 456:2000".
+
+    Their contract documents `number` as the full BIS designation ("IS
+    694:2010"); this engine stores designation and edition separately. Emitting
+    the bare number made every detail page render "IS 456" where the UI, and
+    any officer reading it, expects the citable form.
+    """
+    number = s.get("number", "")
+    year = s.get("edition_year")
+    return f"{number}:{year}" if number and year else number
+
+
 def _certification_block(cert: Dict[str, Any]) -> Dict[str, Any]:
     status = cert.get("certification_status")
     scheme = cert.get("scheme")
@@ -99,7 +128,7 @@ def _to_result(state: Dict[str, Any], hit: Dict[str, Any],
 
     result = {
         "id": sid,
-        "number": s.get("number", ""),
+        "number": _citation_number(s),
         "title": s.get("title", ""),
         # Bounded, and only comparable within one response, as their field
         # says. Derived from the fused rank rather than raw similarity: the
@@ -243,13 +272,38 @@ def build_router(state: Dict[str, Any], search) -> APIRouter:
     # both this contract and the engine's own.
 
     def _resolve(id_or_number: str) -> Dict[str, Any]:
+        """Resolve an internal id, a bare number, or a full citation.
+
+        The UI links standards as "IS 456:2000" -- number and edition together,
+        which is how a citation is written. Records store those separately, so
+        matching only on `number` 404'd every detail page reached from a
+        citation.
+        """
         by_id = state["allied"].by_id
         if id_or_number in by_id:
             return by_id[id_or_number]
-        wanted = id_or_number.strip().lower()
-        for s in state["standards"]:
-            if s.get("number", "").strip().lower() == wanted:
-                return s
+
+        wanted = id_or_number.strip()
+        year = None
+        if ":" in wanted:
+            head, _, tail = wanted.rpartition(":")
+            tail = tail.strip()
+            if tail.isdigit() and len(tail) == 4:
+                wanted, year = head.strip(), int(tail)
+
+        lowered = wanted.lower()
+        matches = [s for s in state["standards"]
+                   if s.get("number", "").strip().lower() == lowered]
+        if year is not None:
+            exact = [s for s in matches if s.get("edition_year") == year]
+            if exact:
+                return exact[0]
+        if matches:
+            # Prefer the citable edition when the citation named one we lack.
+            active = [s for s in matches if s.get("status") == "active"]
+            pool = active or matches
+            return max(pool, key=lambda s: s.get("edition_year") or 0)
+
         raise HTTPException(404, f"unknown standard {id_or_number}")
 
     @router.get("/standards/{id_or_number}")
@@ -257,9 +311,10 @@ def build_router(state: Dict[str, Any], search) -> APIRouter:
         s = _resolve(id_or_number)
         cert = state["certification"].advise(s["id"])
         return {
-            **{k: s.get(k) for k in ("id", "number", "title", "scope", "status",
+            **{k: s.get(k) for k in ("id", "title", "scope", "status",
                                      "committee", "department", "provenance",
                                      "verified", "source_url")},
+            "number": _citation_number(s),
             "version": str(s.get("edition_year") or ""),
             "certification": _certification_block(cert),
             "version_info": state["versions"].resolve(s["id"]),
@@ -267,16 +322,71 @@ def build_router(state: Dict[str, Any], search) -> APIRouter:
 
     @router.get("/standards/{id_or_number}/related")
     def standard_related(id_or_number: str):
-        s = _resolve(id_or_number)
-        grouped = state["allied"].grouped_allied(s["id"])
+        """Allied cluster in the shape the detail page renders.
+
+        Their contract groups forward dependencies by relation type, separates
+        inverse references, and carries a `researched` flag plus per-item
+        `outside_corpus`. That is a better shape than a flat list: it can say
+        "this standard cites IS 383, which we do not hold" rather than quietly
+        omitting it -- and 3,009 extracted references point outside this
+        corpus.
+        """
+        s_rec = _resolve(id_or_number)
+        grouped = state["allied"].grouped_allied(s_rec["id"])
+
+        depends_on = []
+        for rel, edges in grouped.items():
+            forward = [e for e in edges if e.get("direction") == "forward"]
+            if not forward:
+                continue
+            depends_on.append({
+                "type": rel,
+                "heading": RELATION_HEADINGS.get(rel, rel.replace("_", " ").title()),
+                "explanation": RELATION_EXPLANATIONS.get(rel),
+                "standards": [{
+                    "id": e["id"], "number": e["number"], "title": e["title"],
+                    "status": e.get("status", "active"),
+                    "note": e.get("relation_note", ""),
+                    "outside_corpus": False,
+                } for e in forward],
+            })
+
+        referenced_by = [{
+            "id": e["id"], "number": e["number"], "title": e["title"],
+            "status": e.get("status", "active"),
+            "note": e.get("relation_note", ""),
+        } for edges in grouped.values() for e in edges
+            if e.get("direction") == "inverse"]
+
+        # References read from the document's annex that name a standard this
+        # corpus does not hold. Shown rather than dropped.
+        held = {e["number"] for g in depends_on for e in g["standards"]}
+        outside = []
+        for ref in (s_rec.get("referred_standards") or []):
+            num = f"IS {ref['number']}" + (f" (Part {ref['part']})" if ref.get("part") else "")
+            if num not in held:
+                outside.append({"id": None, "number": num, "title": "",
+                                "status": "unknown", "note": "",
+                                "outside_corpus": True})
+        if outside:
+            depends_on.append({
+                "type": "outside_corpus",
+                "heading": "Cited but not in this corpus",
+                "explanation": ("Named in this standard's referred-standards annex. "
+                                "This corpus does not hold them, so nothing is claimed "
+                                "about their content or status."),
+                "standards": outside,
+            })
+
+        total = sum(len(g["standards"]) for g in depends_on) + len(referenced_by)
         return {
-            "id": s["id"],
-            "number": s.get("number", ""),
-            "related": [
-                {**edge, "relation": rel}
-                for rel, edges in grouped.items() for edge in edges
-            ],
-            "count": sum(len(v) for v in grouped.values()),
+            "id": s_rec["id"],
+            "number": _citation_number(s_rec),
+            "total": total,
+            # Absence of edges is not a claim that a standard stands alone.
+            "researched": bool(s_rec.get("allied")) or bool(s_rec.get("referred_standards")),
+            "depends_on": depends_on,
+            "referenced_by": referenced_by,
         }
 
     @router.get("/standards/{id_or_number}/amendments")
@@ -285,7 +395,7 @@ def build_router(state: Dict[str, Any], search) -> APIRouter:
         amendments = s.get("amendments") or []
         return {
             "id": s["id"],
-            "number": s.get("number", ""),
+            "number": _citation_number(s),
             "amendments": amendments,
             "count": len(amendments),
             # Absence of amendment records is not a statement that none exist.

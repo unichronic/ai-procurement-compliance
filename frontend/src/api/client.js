@@ -192,9 +192,16 @@ export async function extractAndSearch(file, { topK = 10, signal } = {}) {
  * Every standard in the corpus, optionally filtered by sector.
  * The corpus is small enough to fetch whole; the catalogue filters client-side.
  */
-export function listStandards({ category, signal } = {}) {
-  const query = category ? `?category=${encodeURIComponent(category)}` : '';
-  return request(`/standards${query}`, { signal });
+export async function listStandards({ category, limit = 2000, signal } = {}) {
+  // The engine returns a paginated envelope ({count, limit, offset, standards})
+  // because the corpus is 6,383 records. Callers here expect a bare array, so
+  // it is unwrapped at this boundary rather than de-paginating the API.
+  const params = new URLSearchParams();
+  if (category) params.set('category', category);
+  params.set('limit', String(limit));
+  const data = await request(`/standards?${params.toString()}`, { signal });
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data?.standards) ? data.standards : [];
 }
 
 /**

@@ -69,15 +69,39 @@ def test_standards_list_and_detail_and_related(client):
 
     detail = client.get("/standards/IS_2062_2011")
     assert detail.status_code == 200
-    assert detail.json()["number"] == "IS 2062"
+    # Full citation form, per their contract ("IS 694:2010"): the detail page
+    # renders this directly, and an officer needs the citable designation.
+    assert detail.json()["number"] == "IS 2062:2011"
 
-    # resolvable by human-readable number too, which is what the UI links on
-    by_number = client.get("/standards/IS%202062")
-    assert by_number.status_code == 200
+    # Resolvable by bare number and by citation, which is how the UI links.
+    assert client.get("/standards/IS%202062").status_code == 200
+    assert client.get("/standards/IS%202062:2011").status_code == 200
 
     related = client.get("/standards/IS_2062_2011/related").json()
-    assert related["count"] >= 1
-    assert all("relation" in e for e in related["related"])
+    assert related["total"] >= 1
+    assert related["researched"] is True
+    # Forward dependencies grouped by relation, inverse references separate.
+    assert any(g["standards"] for g in related["depends_on"]) or related["referenced_by"]
+    for group in related["depends_on"]:
+        assert group["heading"]
+        assert all("outside_corpus" in x for x in group["standards"])
+
+
+def test_related_marks_references_outside_the_corpus(client):
+    """3,009 extracted references name standards this corpus does not hold.
+    Showing them as "cited but not held" is honest; omitting them silently
+    would imply the cluster is complete."""
+    related = client.get("/standards/IS_10500_2012/related").json()
+    groups = {g["type"]: g for g in related["depends_on"]}
+    if "outside_corpus" in groups:
+        assert all(x["outside_corpus"] for x in groups["outside_corpus"]["standards"])
+        assert "nothing is claimed" in groups["outside_corpus"]["explanation"]
+
+
+def test_related_absence_is_not_a_claim_of_none(client):
+    """`researched` distinguishes "no relationships" from "never looked"."""
+    related = client.get("/standards/IS_2062_2011/related").json()
+    assert "researched" in related
 
 
 def test_amendments_absence_is_not_a_claim_of_none(client):
