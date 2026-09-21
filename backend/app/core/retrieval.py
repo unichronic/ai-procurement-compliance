@@ -61,6 +61,11 @@ CHUNK_SCORE_DAMPING = float(os.environ.get("CHUNK_SCORE_DAMPING", "0.88"))
 # the held-out set.
 LEXICAL_WEIGHT = float(os.environ.get("LEXICAL_WEIGHT", "0.5"))
 
+# Weight for an exact alias phrase hit. Aliases are a curated claim that
+# officers call a standard by this name, so a hit is hard evidence and gets its
+# own channel rather than being diluted into the lexical bag.
+ALIAS_WEIGHT = float(os.environ.get("ALIAS_WEIGHT", "0.05"))
+
 
 # Function words plus procurement boilerplate. These are not merely useless,
 # they are harmful: "protective headgear for labourers at building sites"
@@ -100,6 +105,7 @@ class StandardsIndex:
         self._bm25: BM25Okapi | None = None
         self._embeddings: np.ndarray | None = None
         self._designations: List[List[str]] = []
+        self._aliases: List[List[str]] = []
         self._chunk_embeddings: np.ndarray | None = None
         self._chunk_owner: List[int] = []
         self.cache_hit = False
@@ -185,6 +191,10 @@ class StandardsIndex:
         self._designations = [
             [d.lower() for d in (s.get("designations") or [])] for s in self.standards
         ]
+        self._aliases = [
+            [a.lower().strip() for a in (s.get("aliases") or []) if a.strip()]
+            for s in self.standards
+        ]
 
         chunk_texts: List[str] = []
         self._chunk_owner = []
@@ -249,6 +259,30 @@ class StandardsIndex:
                 pooled[owner] = chunk_scores[chunk_idx]
         return pooled
 
+    def _alias_scores(self, query: str) -> np.ndarray:
+        """Exact alias phrase hits — a separate channel, not lexical bag terms.
+
+        Aliases used to live inside the BM25 document, which coupled them to
+        LEXICAL_WEIGHT. That weight was then tuned on the held-out set, which
+        deliberately avoids every alias string, so the tuning was blind to the
+        alias mechanism and quietly broke it: "MS plate" stopped returning
+        IS 2062 at all, despite "MS plate" being one of its aliases.
+
+        An alias is a curated statement that officers call this standard by
+        this name. That is hard evidence like a designation, so it gets its own
+        channel and is scored by phrase, not by token overlap — "steel plate"
+        should not half-match the alias "MS plate".
+        """
+        q = f" {query.lower()} "
+        scores = np.zeros(len(self.standards), dtype=float)
+        for idx, aliases in enumerate(self._aliases):
+            for alias in aliases:
+                if f" {alias} " in q:
+                    # Longer aliases are more specific; a 9-char match is
+                    # weaker evidence than a 20-char one.
+                    scores[idx] = max(scores[idx], 1.0 + len(alias) / 40.0)
+        return scores
+
     def _designation_scores(self, query: str) -> np.ndarray:
         """Symbolic channel: exact hits on technical designations (E250, IE3,
         M25, 22K, 14.2 kg). These are near-unique identifiers rather than fuzzy
@@ -308,9 +342,12 @@ class StandardsIndex:
         # hit is hard evidence, so it should lift a standard past soft scores
         # instead of contributing a fractional rank term.
         designation_scores = self._designation_scores(query)
+        alias_scores = self._alias_scores(query)
         for idx in range(len(self.standards)):
             if designation_scores[idx]:
                 rrf[idx] += DESIGNATION_WEIGHT * designation_scores[idx]
+            if alias_scores[idx]:
+                rrf[idx] += ALIAS_WEIGHT * alias_scores[idx]
 
         # Demote editions that cannot be cited. Superseded and withdrawn
         # editions share a number, title and most of their scope with the
@@ -342,5 +379,6 @@ class StandardsIndex:
                 "semantic_similarity": float(sem_scores[idx]),
                 "bm25_score": float(bm25_scores[idx]),
                 "designation_hits": int(designation_scores[idx]),
+                "alias_hit": bool(alias_scores[idx]),
             })
         return results

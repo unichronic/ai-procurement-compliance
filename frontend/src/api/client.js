@@ -10,7 +10,16 @@
  * the engine is running is worse than one that admits the engine is down.
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+// Engine URL is hardcoded so the deployed frontend needs no environment
+// variable. VITE_API_URL still overrides it for local development against
+// a backend on another port.
+//
+// NOTE: this is a Cloudflare quick tunnel to a developer machine. It is a
+// demo endpoint -- it dies when that machine sleeps and the hostname
+// changes on every restart. Replace with a real container host before
+// anyone depends on it.
+const DEFAULT_ENGINE_URL = 'https://gmt-watt-lucy-walk.trycloudflare.com';
+const BASE_URL = import.meta.env.VITE_API_URL ?? DEFAULT_ENGINE_URL;
 
 /** Cold start loads two transformer models; first call is slow. */
 const TIMEOUT_MS = 45000;

@@ -164,6 +164,7 @@ def main():
     print(f"  of which name a successor: {len(with_successor)}")
 
     applied = cross_number = withdrawn_only = unmatched = ambiguous = 0
+    refused_newest = 0
     for row in rows:
         src = parse_number(row["number"])
         if not src:
@@ -204,6 +205,27 @@ def main():
                             cross_number += 1
 
         for target in targets:
+            # REFUSE to mark the newest edition of a number as withdrawn with
+            # no successor named.
+            #
+            # A first run of this applied 1,528 rows and left 1,085 records
+            # that are the newest edition of their number marked
+            # withdrawn-without-replacement — including IS 2062:2011
+            # (structural steel) and IS 1077 (burnt clay bricks), both current.
+            # Each of those would have produced a high-severity finding telling
+            # an officer not to cite a live standard: the exact harm this
+            # project exists to prevent.
+            #
+            # The endpoint's data is real, but the table's semantics are not
+            # yet understood well enough to apply safely (it appears to include
+            # rows beyond simple withdrawals). Until that is resolved, the
+            # dangerous shape is refused rather than trusted.
+            if not succ_ids:
+                siblings = [c for c in candidates if c.get("edition_year")]
+                if siblings and target is max(siblings, key=lambda c: c["edition_year"]):
+                    refused_newest += 1
+                    continue
+
             target["status"] = "withdrawn" if not succ_ids else "superseded"
             if succ_ids:
                 target["superseded_by"] = succ_ids
@@ -218,6 +240,7 @@ def main():
     print(f"  withdrawn with no successor named: {withdrawn_only}")
     print(f"  BIS rows not in our corpus: {unmatched}")
     print(f"  skipped as ambiguous (edition not identifiable): {ambiguous}")
+    print(f"  REFUSED (would mark newest edition withdrawn): {refused_newest}")
 
     if args.write:
         doc["standards"] = standards

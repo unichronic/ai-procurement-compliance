@@ -223,6 +223,8 @@ def _build_recommendation(hit: Dict[str, Any]) -> Dict[str, Any]:
             "semantic_similarity": round(hit["semantic_similarity"], 4),
             "lexical_rank": hit["lexical_rank"],
             "semantic_rank": hit["semantic_rank"],
+            "alias_hit": bool(hit.get("alias_hit")),
+            "designation_hits": int(hit.get("designation_hits") or 0),
             "fused_score": round(hit["fused_score"], 5),
         },
         "version": version_info,
@@ -426,16 +428,39 @@ def get_standard(standard_id: str):
 
 
 @app.get("/standards")
-def list_standards(department: Optional[str] = None):
+def list_standards(department: Optional[str] = None,
+                   category: Optional[str] = None,
+                   limit: int = 200,
+                   offset: int = 0):
+    """Paginated catalogue.
+
+    Paginated because the corpus is 6,383 records: returning all of them in
+    one response was fine at 39 and is not now. `category` is accepted as well
+    as `department` because the React frontend filters on that name.
+    """
     standards = _state["standards"]
     if department:
         standards = [s for s in standards if s["department"] == department]
+    if category:
+        needle = category.lower()
+        standards = [s for s in standards
+                     if needle in (str(s.get("category", "")) +
+                                   str(s.get("department", ""))).lower()]
+
+    limit = max(1, min(limit, 2000))
+    offset = max(0, offset)
+    page = standards[offset:offset + limit]
     return {
         "count": len(standards),
+        "limit": limit,
+        "offset": offset,
         "standards": [
             {"id": s["id"], "number": s["number"], "title": s["title"],
-             "department": s["department"], "status": s["status"]}
-            for s in standards
+             "department": s["department"],
+             "category": s.get("category") or s.get("department") or "",
+             "version": str(s.get("edition_year") or ""),
+             "status": s["status"]}
+            for s in page
         ],
     }
 
@@ -443,6 +468,13 @@ def list_standards(department: Optional[str] = None):
 @app.get("/qco-orders")
 def list_qco_orders():
     return {"count": len(_state["qco_orders"]), "orders": _state["qco_orders"]}
+
+
+# Contract the team's React frontend was written against, mapped onto this
+# engine. Registered before the static mount so /standards/{id} resolves here.
+from app.compat import build_router  # noqa: E402
+
+app.include_router(build_router(_state, _search))
 
 
 # Serves the frontend at /ui/ (same origin as the API, so no CORS needed for
