@@ -343,3 +343,37 @@ def _encode_cp1252_mixed(text: str) -> bytes:
             else:
                 raise
     return bytes(out)
+
+
+_CLAUSE2_RE = re.compile(r"\b2\s+REFERENCES\b(.{0,2500}?)(?=\b\d+\s+[A-Z]{3,}|\Z)", re.S)
+
+
+def extract_clause2_references(raw: str, *, self_number: Optional[str] = None) -> List[Dict[str, Any]]:
+    """Normative references listed inline in clause 2, rather than in an annex.
+
+    Only about one document in forty carries a "LIST OF REFERRED INDIAN
+    STANDARDS" annex; many instead name the standards directly in clause 2,
+    which is normative by definition.
+
+    Restricted to clause 2 on purpose. Harvesting IS numbers from anywhere in
+    the body would find passing mentions as readily as dependencies, and a
+    fabricated normative reference becomes a wrong lint finding told to a
+    procurement officer.
+    """
+    m = _CLAUSE2_RE.search(raw)
+    if not m:
+        return []
+
+    out: List[Dict[str, Any]] = []
+    seen = set()
+    for match in _IS_NUMBER_RE.finditer(m.group(1)):
+        number, part, year = match.group(1), match.group(2), match.group(3)
+        if self_number and number == str(self_number):
+            continue
+        key = (number, part)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"number": number, "part": part,
+                    "year": int(year) if year else None})
+    return out
