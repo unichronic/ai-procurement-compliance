@@ -1,0 +1,32 @@
+# Vercel builds the React frontend only. The retrieval/audit backend cannot run
+# as a serverless function and must not be bundled into one.
+#
+# Why: requirements.txt pulls torch, faiss-cpu, lightgbm, transformers, scipy
+# and sklearn. On Vercel's Linux runners that installed to 5,675 MB against a
+# 500 MB function limit. Trimming dependencies would not rescue it either — the
+# engine loads a 470 MB embedding model, builds an index over 6,383 standards
+# in ~50s, and then serves from that index in memory. A serverless function has
+# no memory between invocations, so every cold start would pay the full build.
+#
+# The backend belongs on a container host; backend/Dockerfile builds it with
+# the model and embeddings baked in. (Long term, government deployment requires
+# MeitY-empanelled hosting anyway, so Vercel was always a demo stopgap here.)
+
+backend/
+data_pipeline/
+data/
+services/
+standards-retrieval/
+app/
+api/
+tests/
+scripts/
+scratch/
+ingest.py
+requirements.txt
+Dockerfile
+docker-compose.yml
+Solution_details/
+docs/
+*.md
+!frontend/README.md
