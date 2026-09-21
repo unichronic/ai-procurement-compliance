@@ -10,6 +10,11 @@ python-dotenv==1.0.1
 pypdf==5.1.0
 python-docx==1.1.2
 python-multipart==0.0.12
+# OCR fallback for scanned tenders. Needs a system Tesseract binary
+# (macOS: brew install tesseract); tests self-skip without it.
+PyMuPDF==1.26.5
+pytesseract==0.3.13
+
 pytest==8.3.3
 pytest-mock==3.14.0
 # Browser E2E tests; they self-skip if the browser binary isn't installed.

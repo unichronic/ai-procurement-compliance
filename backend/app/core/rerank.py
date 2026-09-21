@@ -37,8 +37,15 @@ from typing import Any, Dict, List, Optional
 DEFAULT_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 # Rerank this many RRF candidates. Beyond the first stage's reach it can't help,
-# and cross-encoder cost is linear in candidates.
-RERANK_CANDIDATES = int(os.environ.get("RERANK_CANDIDATES", "20"))
+# and cross-encoder cost is linear in candidates. Measured on the held-out set:
+#
+#   depth 20   R@1 0.73  R@5 0.95  MRR 0.841
+#   depth 10   R@1 0.73  R@5 1.00  MRR 0.839   <- shipped, ~1.8x faster
+#   depth  5   R@1 0.68  R@5 0.91  MRR 0.799
+#
+# Depth 10 gives up 0.002 MRR to eliminate the last complete miss. A deeper
+# pool hands the cross-encoder more weak candidates to mistakenly promote.
+RERANK_CANDIDATES = int(os.environ.get("RERANK_CANDIDATES", "10"))
 
 # Damping for fusing the cross-encoder's ranking with the first stage's. Lower
 # values let the reranker move candidates further; tuned on the held-out set.

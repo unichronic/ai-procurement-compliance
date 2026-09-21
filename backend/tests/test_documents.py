@@ -1,14 +1,19 @@
 """Document upload tests. Fixtures are generated as real PDF/DOCX bytes rather
 than mocked, so these exercise the actual parsers."""
 import io
+import shutil
+from pathlib import Path
 
 import pytest
 
 from app.core.documents import (
     MAX_UPLOAD_BYTES,
+    MIN_TEXT_LAYER_CHARS,
     UnsupportedDocument,
     detect_kind,
+    extract_pdf_text,
     extract_text,
+    extract_text_with_meta,
 )
 
 DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -116,17 +121,78 @@ def test_extract_pdf_text():
     assert "IS 2062:2006" in text
 
 
-def test_empty_document_rejected_with_actionable_message():
+def test_genuinely_empty_pdf_rejected():
+    """A blank PDF yields nothing from the text layer and nothing from OCR --
+    there is no text to find, as distinct from text we couldn't read."""
     data = _make_pdf([])
     with pytest.raises(UnsupportedDocument) as exc:
         extract_text(data, filename="t.pdf", content_type="application/pdf")
-    assert "OCR" in str(exc.value)
+    assert "No text could be extracted" in str(exc.value)
 
 
 def test_oversized_upload_rejected():
     with pytest.raises(UnsupportedDocument) as exc:
         extract_text(b"x" * (MAX_UPLOAD_BYTES + 1), filename="t.txt", content_type="text/plain")
     assert "limit" in str(exc.value).lower()
+
+
+SCANNED_FIXTURE = (
+    Path(__file__).resolve().parents[2]
+    / "standards-retrieval" / "tests" / "fixtures" / "scanned_tender.pdf"
+)
+
+
+def _tesseract_available() -> bool:
+    return shutil.which("tesseract") is not None
+
+
+def test_text_layer_pdf_does_not_trigger_ocr():
+    # Comfortably over MIN_TEXT_LAYER_CHARS, so the text layer is used as-is.
+    data = _make_pdf(["Supply of hot rolled structural steel sections",
+                      "conforming to IS 2062:2006, quantity 10 MT"])
+    result = extract_text_with_meta(data, filename="t.pdf",
+                                    content_type="application/pdf")
+    assert result["method"] == "pdf"
+    assert result["warnings"] == []
+
+
+@pytest.mark.skipif(not SCANNED_FIXTURE.exists(), reason="scanned fixture absent")
+@pytest.mark.skipif(not _tesseract_available(), reason="tesseract binary not installed")
+def test_scanned_pdf_falls_back_to_ocr():
+    """A scanned tender has no text layer at all. Government tenders are
+    routinely circulated as scans of signed printouts, so without OCR they are
+    simply unreadable."""
+    data = SCANNED_FIXTURE.read_bytes()
+    assert len(extract_pdf_text(data).strip()) < MIN_TEXT_LAYER_CHARS
+
+    result = extract_text_with_meta(data, filename="scanned_tender.pdf",
+                                    content_type="application/pdf")
+    assert result["method"] == "pdf-ocr"
+    assert "NOTICE INVITING TENDER" in result["text"].upper()
+    assert any("OCR" in w for w in result["warnings"]), \
+        "OCR output must be labelled; it is materially less reliable than a text layer"
+
+
+@pytest.mark.skipif(not SCANNED_FIXTURE.exists(), reason="scanned fixture absent")
+@pytest.mark.skipif(not _tesseract_available(), reason="tesseract binary not installed")
+def test_lint_reads_a_scanned_tender_end_to_end(client):
+    data = SCANNED_FIXTURE.read_bytes()
+    resp = client.post(
+        "/lint/upload",
+        files={"file": ("scanned_tender.pdf", data, "application/pdf")},
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["extraction_method"] == "pdf-ocr"
+    assert body["extraction_warnings"]
+    assert body["characters_extracted"] > 200
+
+
+def test_ocr_can_be_disabled():
+    data = _make_pdf([])
+    with pytest.raises(UnsupportedDocument):
+        extract_text_with_meta(data, filename="t.pdf",
+                               content_type="application/pdf", allow_ocr=False)
 
 
 def test_lint_upload_endpoint_end_to_end(client):

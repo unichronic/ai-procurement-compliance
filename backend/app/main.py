@@ -21,7 +21,7 @@ from app.core.certification import CertificationAdvisor
 from app.core.batch import split_document
 from app.core.explain import ExplanationGenerator
 from app.core.lint import SpecLinter
-from app.core.documents import UnsupportedDocument, extract_text
+from app.core.documents import UnsupportedDocument, extract_text_with_meta
 from app.core.limits import MAX_DOCUMENT_CHARS, MAX_QUERY_CHARS, RateLimiter
 from app.core.rerank import RERANK_CANDIDATES, CrossEncoderReranker
 
@@ -301,15 +301,18 @@ async def lint_uploaded_document(file: UploadFile = File(...),
     """
     data = await file.read()
     try:
-        text = extract_text(data, filename=file.filename,
-                            content_type=file.content_type)
+        extracted = extract_text_with_meta(data, filename=file.filename,
+                                           content_type=file.content_type)
     except UnsupportedDocument as exc:
         raise HTTPException(400, str(exc))
 
+    text = extracted["text"]
     result = _state["linter"].lint(text, suggest_missing=suggest_missing)
     return {
         "filename": file.filename,
         "characters_extracted": len(text),
+        "extraction_method": extracted["method"],
+        "extraction_warnings": extracted["warnings"],
         "document_text": text,
         **result,
     }
