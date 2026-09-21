@@ -169,6 +169,45 @@ def test_clean_document_produces_no_findings(sample_standards, sample_qco_orders
     assert result["summary"]["total"] == 0
 
 
+def test_unchecked_certification_is_surfaced_not_silent(sample_standards, sample_qco_orders):
+    """Silence would let an officer read "no certification finding" as "no
+    certification needed". For the 99% of the corpus nobody has researched,
+    that inference is exactly backwards."""
+    unchecked = dict(sample_standards[0])
+    unchecked.update({"id": "IS_9999_2020", "number": "IS 9999", "edition_year": 2020,
+                      "allied": [], "aliases": [], "designations": []})
+    unchecked.pop("qco", None)
+    unchecked.pop("qco_checked", None)
+
+    linter = _linter(sample_standards + [unchecked], sample_qco_orders)
+    result = linter.lint("Item per IS 9999:2020.", suggest_missing=False)
+
+    findings = _by_rule(result, "certification_unverified")
+    assert len(findings) == 1
+    assert "IS 9999" in findings[0]["message"]
+    assert "clearance" in findings[0]["message"].lower()
+
+
+def test_unverified_certification_reported_once_per_document(
+        sample_standards, sample_qco_orders):
+    """One calibrating finding, not one per citation -- a warning repeated on
+    every line is noise that gets scrolled past."""
+    extras = []
+    for n in (9001, 9002, 9003):
+        rec = dict(sample_standards[0])
+        rec.update({"id": f"IS_{n}_2020", "number": f"IS {n}", "edition_year": 2020,
+                    "allied": [], "aliases": [], "designations": []})
+        rec.pop("qco", None)
+        rec.pop("qco_checked", None)
+        extras.append(rec)
+
+    linter = _linter(sample_standards + extras, sample_qco_orders)
+    result = linter.lint("Items per IS 9001:2020, IS 9002:2020 and IS 9003:2020.",
+                         suggest_missing=False)
+
+    assert len(_by_rule(result, "certification_unverified")) == 1
+
+
 def test_summary_counts(sample_standards, sample_qco_orders):
     linter = _linter(sample_standards, sample_qco_orders)
     result = linter.lint("Steel to IS 2062:2006.", suggest_missing=False)

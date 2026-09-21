@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
+import time
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -101,7 +104,45 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 
+logging.basicConfig(
+    level=os.environ.get("LOG_LEVEL", "INFO"),
+    format='{"ts":"%(asctime)s","level":"%(levelname)s","logger":"%(name)s","msg":"%(message)s"}',
+)
+logger = logging.getLogger("sih26108")
+
 _rate_limiter = RateLimiter()
+
+
+@app.middleware("http")
+async def request_context(request: Request, call_next):
+    """Correlate and time every request.
+
+    A tender audit is something an officer may have to justify later, so a
+    finding needs to be traceable back to the request that produced it. The
+    id is echoed in the response header so a user can quote it in a bug
+    report.
+    """
+    request_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex[:12]
+    started = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception(
+            "request failed request_id=%s method=%s path=%s",
+            request_id, request.method, request.url.path,
+        )
+        raise
+    elapsed_ms = (time.perf_counter() - started) * 1000
+    response.headers["X-Request-ID"] = request_id
+
+    # Static assets are noise; the API surface is what anyone debugs.
+    if not request.url.path.startswith("/ui"):
+        logger.info(
+            "request_id=%s method=%s path=%s status=%s duration_ms=%.1f",
+            request_id, request.method, request.url.path,
+            response.status_code, elapsed_ms,
+        )
+    return response
 
 
 @app.middleware("http")
@@ -213,6 +254,33 @@ class ExplainRequest(BaseModel):
     semantic_similarity: Optional[float] = None
     lexical_rank: Optional[int] = None
     semantic_rank: Optional[int] = None
+
+
+@app.get("/health/live")
+def liveness():
+    """Process is up. Deliberately does not touch the index.
+
+    Kubernetes restarts a container that fails liveness, so this must not fail
+    merely because the corpus is still loading — that would restart the pod
+    forever and it would never finish starting.
+    """
+    return {"status": "alive"}
+
+
+@app.get("/health/ready")
+def readiness():
+    """Ready to serve. Fails with 503 until the index is actually built, so a
+    rolling deploy doesn't route traffic to a process that would 500."""
+    if "index" not in _state or _state.get("index") is None:
+        return JSONResponse(status_code=503, content={
+            "status": "not_ready",
+            "detail": "standards index is still building",
+        })
+    return {
+        "status": "ready",
+        "standards_loaded": len(_state["standards"]),
+        "embedding_cache_hit": getattr(_state["index"], "cache_hit", False),
+    }
 
 
 @app.get("/health")

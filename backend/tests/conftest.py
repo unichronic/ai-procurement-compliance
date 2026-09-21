@@ -30,6 +30,7 @@ STEEL = {
     ],
     "qco": {"mandatory": True, "order_id": "QCO_STEEL_2021", "scheme": "ISI"},
     "data_confidence": "high",
+    "qco_checked": True,
     "aliases": ["MS plate", "mild steel plate", "structural steel", "MS angle"],
     "designations": ["E250", "E350", "Fe 410"],
 }
@@ -49,6 +50,7 @@ STEEL_OLD = {
     "allied": [],
     "qco": None,
     "data_confidence": "medium",
+    "qco_checked": True,
     "aliases": ["MS plate", "structural steel"],
     "designations": ["Fe 410"],
 }
@@ -68,6 +70,7 @@ GOLD = {
     "allied": [],
     "qco": {"mandatory": False, "order_id": None, "scheme": "Hallmark", "note": "Hallmarking is mandatory for gold; voluntary for silver as of 2026."},
     "data_confidence": "high",
+    "qco_checked": True,
     "aliases": ["gold jewellery", "gold hallmark", "sona"],
     "designations": ["22K", "916"],
 }
@@ -87,6 +90,7 @@ TEST_METHOD = {
     "allied": [],
     "qco": None,
     "data_confidence": "high",
+    "qco_checked": True,
 }
 
 INSTALLATION = {
@@ -104,6 +108,7 @@ INSTALLATION = {
     "allied": [],
     "qco": None,
     "data_confidence": "medium",
+    "qco_checked": True,
 }
 
 SAMPLE_STANDARDS = [STEEL, STEEL_OLD, GOLD, TEST_METHOD, INSTALLATION]

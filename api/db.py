@@ -9,10 +9,16 @@ from typing import Generator
 import psycopg
 from psycopg.rows import dict_row
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://procurement:procurement@localhost:55432/procurement",
-)
+# No credential default. A baked-in username and password is the one that ends
+# up in production because nobody noticed the env var was missing; failing to
+# start is the safer outcome, and the message says exactly what to set.
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL is not set. Export it before starting, e.g.\n"
+        "  export DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DBNAME\n"
+        "See .env.example."
+    )
 
 
 @contextmanager

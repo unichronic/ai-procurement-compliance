@@ -84,6 +84,7 @@ class SpecLinter:
         findings += self._rule_missing_marking(resolved, text)
         if suggest_missing:
             findings += self._rule_uncited_items(text, cited_ids)
+        findings += self._rule_unverified_certification(resolved, cited_ids)
 
         findings.sort(key=lambda f: (SEVERITY_ORDER.get(f["severity"], 9),
                                      f["span"][0] if f["span"] else 10**9))
@@ -117,13 +118,27 @@ class SpecLinter:
             else:
                 fix = "No active successor found in the corpus; verify with BIS."
 
+            # A supersession inferred from edition years is a weaker claim than
+            # one read from a document, and the officer acting on it is
+            # entitled to know which they have.
+            record = next((s for s in self.standards if s["id"] == r["standard_id"]), {})
+            derived = record.get("supersession_source") == "derived_from_edition_year"
+            authority = (
+                "Inferred: a later edition of this number exists in the corpus. "
+                "Not read from the BIS catalogue — confirm before relying on it."
+                if derived else
+                "Recorded supersession for this standard."
+            )
+
             out.append(_finding(
-                "superseded_citation", "high",
+                "superseded_citation", "high" if not derived else "medium",
                 f"{r['raw']} refers to a {info['status'].upper()} edition. "
                 f"A tender citing it can be challenged as referencing an "
-                f"outdated specification.",
+                f"outdated specification."
+                + (" (Inferred from a later edition in the corpus, not confirmed "
+                   "against the BIS catalogue.)" if derived else ""),
                 span=r["span"], evidence=r["raw"], suggested_fix=fix,
-                authority="BIS catalogue supersession record",
+                authority=authority,
                 standard_id=r["standard_id"],
             ))
         return out
@@ -188,6 +203,45 @@ class SpecLinter:
                 standard_id=sid,
             ))
         return out
+
+    def _rule_unverified_certification(self, resolved, cited_ids) -> List[Dict[str, Any]]:
+        """Say out loud when certification status is unknown rather than absent.
+
+        Certification data covers a fraction of a percent of the corpus, so for
+        almost any real tender this engine has not checked whether a Quality
+        Control Order applies. Staying silent would let an officer read "no
+        certification finding" as "no certification needed", which is exactly
+        backwards and the most consequential mistake this tool could invite.
+
+        Emitted once per document rather than once per citation: the point is
+        to calibrate trust in the whole report, and a finding repeated on every
+        line is noise that gets scrolled past.
+        """
+        unknown = []
+        for sid in cited_ids:
+            status = self.certification.advise(sid).get("certification_status")
+            if status == "unknown":
+                record = next((s for s in self.standards if s["id"] == sid), {})
+                unknown.append(record.get("number", sid))
+
+        if not unknown:
+            return []
+
+        listed = ", ".join(sorted(set(unknown))[:6])
+        more = len(set(unknown)) - 6
+        if more > 0:
+            listed += f", and {more} more"
+
+        return [_finding(
+            "certification_unverified", "low",
+            f"Certification requirements have not been checked for {listed}. "
+            f"No certification finding above should be read as a clearance for "
+            f"these — a Quality Control Order may apply.",
+            suggested_fix=("Verify these against the BIS QCO notifications before "
+                           "issuing the tender."),
+            authority=("Coverage limit: QCO data in this corpus covers a small "
+                       "fraction of standards."),
+        )]
 
     def _rule_uncited_items(self, text, cited_ids) -> List[Dict[str, Any]]:
         """A line item describes a product but cites no standard at all."""

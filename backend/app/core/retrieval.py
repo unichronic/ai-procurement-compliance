@@ -16,13 +16,18 @@ via Reciprocal Rank Fusion, so neither signal alone can starve the other.
 """
 from __future__ import annotations
 
+import hashlib
+import logging
 import os
 import re
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 
 import numpy as np
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
+
+logger = logging.getLogger(__name__)
 
 _TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
@@ -34,6 +39,12 @@ DESIGNATION_WEIGHT = 0.05
 # worth surfacing (the linter has to recognise one when a draft cites it), just
 # never ahead of an edition that can actually be cited.
 SUPERSEDED_PENALTY = float(os.environ.get("SUPERSEDED_PENALTY", "0.6"))
+
+# Cached document embeddings, keyed by a hash of the exact text encoded.
+EMBEDDING_CACHE_DIR = Path(
+    os.environ.get("EMBEDDING_CACHE_DIR", Path(__file__).resolve().parents[1] / ".cache" / "embeddings")
+)
+USE_EMBEDDING_CACHE = os.environ.get("USE_EMBEDDING_CACHE", "1") != "0"
 
 # Max-pooling over chunks gives chunk-rich standards more chances at a high
 # score regardless of relevance, and only part of the corpus has ingested full
@@ -58,6 +69,7 @@ class StandardsIndex:
         self._designations: List[List[str]] = []
         self._chunk_embeddings: np.ndarray | None = None
         self._chunk_owner: List[int] = []
+        self.cache_hit = False
 
     def _doc_text(self, s: Dict[str, Any]) -> str:
         # Aliases go into the indexed text because the hard case in procurement
@@ -68,6 +80,58 @@ class StandardsIndex:
         if aliases:
             base = f"{base} Also known as: {', '.join(aliases)}."
         return base
+
+    def _cache_key(self, docs: List[str], chunk_texts: List[str]) -> str:
+        """Content hash of everything the embeddings depend on.
+
+        Keyed on the model name and the exact text encoded, so a corpus edit,
+        an alias change or a model swap all invalidate it automatically. There
+        is no manual "remember to clear the cache" step to forget.
+        """
+        h = hashlib.sha256()
+        h.update(self._model_name.encode())
+        for text in docs:
+            h.update(b"\x00")
+            h.update(text.encode("utf-8"))
+        for text in chunk_texts:
+            h.update(b"\x01")
+            h.update(text.encode("utf-8"))
+        return h.hexdigest()[:24]
+
+    def _load_cache(self, key: str):
+        path = EMBEDDING_CACHE_DIR / f"{key}.npz"
+        if not path.exists():
+            return None
+        try:
+            with np.load(path) as data:
+                chunks = data["chunks"] if "chunks" in data.files else None
+                if chunks is not None and chunks.size == 0:
+                    chunks = None
+                return data["docs"], chunks
+        except Exception as exc:
+            logger.warning("embedding cache unreadable (%s); rebuilding", exc)
+            return None  # a corrupt cache must never break startup
+
+    def _save_cache(self, key: str, doc_emb, chunk_emb) -> None:
+        try:
+            EMBEDDING_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            path = EMBEDDING_CACHE_DIR / f"{key}.npz"
+            # Write via a temp file so a crash mid-write can't leave a
+            # half-written cache that later loads as garbage. The temp name
+            # must itself end in .npz: np.savez appends the extension when it
+            # is missing, so a ".npz.tmp" target silently becomes
+            # ".npz.tmp.npz" and the rename below then finds nothing.
+            tmp = EMBEDDING_CACHE_DIR / f"{key}.tmp.npz"
+            np.savez(
+                tmp,
+                docs=doc_emb,
+                chunks=chunk_emb if chunk_emb is not None else np.empty((0, 0)),
+            )
+            tmp.replace(path)
+        except Exception as exc:
+            # Caching is an optimisation and must never break startup, but a
+            # silent failure means a permanent slow boot nobody diagnoses.
+            logger.warning("embedding cache write failed (%s); continuing uncached", exc)
 
     def build(self) -> None:
         docs = [self._doc_text(s) for s in self.standards]
@@ -89,11 +153,6 @@ class StandardsIndex:
             [d.lower() for d in (s.get("designations") or [])] for s in self.standards
         ]
 
-        self._model = SentenceTransformer(self._model_name)
-        self._embeddings = self._model.encode(
-            docs, normalize_embeddings=True, show_progress_bar=False
-        )
-
         chunk_texts: List[str] = []
         self._chunk_owner = []
         for idx, s in enumerate(self.standards):
@@ -103,10 +162,41 @@ class StandardsIndex:
                     chunk_texts.append(text)
                     self._chunk_owner.append(idx)
 
+        # Encoding 6,383 documents takes ~50s on CPU, on every boot and every
+        # test session. The corpus changes far less often than the process
+        # restarts, so the embeddings are cached against a hash of their input.
+        cache_key = self._cache_key(docs, chunk_texts)
+        cached = self._load_cache(cache_key) if USE_EMBEDDING_CACHE else None
+
+        if cached is not None:
+            self._embeddings, self._chunk_embeddings = cached
+            self._model = None  # loaded lazily; queries still need to encode
+            self.cache_hit = True
+            return
+
+        self._model = SentenceTransformer(self._model_name)
+        self._embeddings = self._model.encode(
+            docs, normalize_embeddings=True, show_progress_bar=False
+        )
+
         self._chunk_embeddings = (
             self._model.encode(chunk_texts, normalize_embeddings=True, show_progress_bar=False)
             if chunk_texts else None
         )
+
+        if USE_EMBEDDING_CACHE:
+            self._save_cache(cache_key, self._embeddings, self._chunk_embeddings)
+
+    def _ensure_query_model(self) -> SentenceTransformer:
+        """The query encoder, loaded on demand.
+
+        A cache hit skips building document embeddings but queries still have
+        to be encoded, so the model loads on first search rather than at
+        startup — which is what keeps a warm boot fast.
+        """
+        if self._model is None:
+            self._model = SentenceTransformer(self._model_name)
+        return self._model
 
     def _semantic_scores(self, q_emb: np.ndarray) -> np.ndarray:
         """Metadata score, max-pooled against the standard's own chunks.
@@ -147,7 +237,7 @@ class StandardsIndex:
         return len(self.standards)
 
     def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        assert self._bm25 is not None and self._model is not None, "Index not built"
+        assert self._bm25 is not None, "Index not built"
 
         # Lexical ranking
         bm25_scores = self._bm25.get_scores(_tokenize(query))
@@ -155,7 +245,8 @@ class StandardsIndex:
         lexical_order = np.argsort(-bm25_scores)
 
         # Semantic ranking
-        q_emb = self._model.encode([query], normalize_embeddings=True, show_progress_bar=False)[0]
+        q_emb = self._ensure_query_model().encode(
+            [query], normalize_embeddings=True, show_progress_bar=False)[0]
         sem_scores = self._semantic_scores(q_emb)
         semantic_order = np.argsort(-sem_scores)
 

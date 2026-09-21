@@ -237,3 +237,38 @@ def test_merge_corpus_counts(sample_standards):
     assert stats["updated"] == 1
     assert stats["added"] == 1
     assert len(merged) == len(sample_standards) + 1
+
+
+# -- mojibake repair ---------------------------------------------------------
+
+from data_pipeline.extract import repair_mojibake  # noqa: E402
+
+
+@pytest.mark.parametrize("damaged,expected", [
+    ("Copper Wire Rods â€” Specification", "Copper Wire Rods — Specification"),
+    ("Polyphosphoric Acid Ã¢â‚¬â€\x9d Specification", "Polyphosphoric Acid — Specification"),
+])
+def test_repairs_double_encoded_text(damaged, expected):
+    assert repair_mojibake(damaged) == expected
+
+
+def test_leaves_clean_text_untouched():
+    clean = "Hot Rolled Structural Steel — Specification"
+    assert repair_mojibake(clean) == clean
+
+
+def test_does_not_mangle_legitimate_accented_text():
+    """A speculative re-decode must not damage text that is already correct.
+    Only a round that strictly reduces damage is kept."""
+    for text in ("Café société", "Ångström measurement", "naïve façade"):
+        assert repair_mojibake(text) == text
+
+
+def test_mixed_damage_is_left_alone_rather_than_half_broken():
+    """Known limitation: a string that is partly damaged and partly correct
+    ("BullÃ¢â‚¬â„¢s ... Kiln — Guidelines", where the em dash is already fine)
+    cannot be fixed by a whole-string round trip, because the trip would break
+    the good half. One record in the corpus is in this state. Returning it
+    unchanged is better than returning it differently broken."""
+    mixed = "Construction of BullÃ¢â‚¬â„¢s Trench Brick Kiln — Guidelines"
+    assert repair_mojibake(mixed) == mixed

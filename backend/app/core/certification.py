@@ -34,14 +34,36 @@ class CertificationAdvisor:
 
         qco = s.get("qco")
         if not qco:
+            # Absence of a QCO record means one of two very different things,
+            # and conflating them is the most dangerous thing this module could
+            # do. QCO data covers a fraction of a percent of the corpus, so for
+            # almost every standard we simply have not looked -- and telling an
+            # officer "certification is not legally required" on that basis
+            # could remove a mandatory ISI requirement from a live tender.
+            if not s.get("qco_checked"):
+                return {
+                    "standard_id": standard_id,
+                    "mandatory_certification": None,
+                    "certification_status": "unknown",
+                    "scheme": None,
+                    "message": (
+                        f"Certification requirements for {s['number']} have NOT been "
+                        f"checked against the Quality Control Order list. This is not "
+                        f"a clearance: a QCO may exist. Verify against the BIS QCO "
+                        f"notifications before issuing a tender."
+                    ),
+                }
+
             return {
                 "standard_id": standard_id,
                 "mandatory_certification": False,
+                "certification_status": "no_qco_identified",
                 "scheme": None,
                 "message": (
-                    f"No Quality Control Order currently mandates certification "
-                    f"for products under {s['number']}. Certification is not "
-                    f"legally required for this item as of the current dataset."
+                    f"No Quality Control Order was identified for products under "
+                    f"{s['number']} when this record was compiled. The underlying "
+                    f"data is hand-compiled and not verified against official BIS "
+                    f"notifications, so confirm before relying on it."
                 ),
             }
 

@@ -12,7 +12,7 @@ from app.models.postgres_models import (
 from app.schemas.ingestion import BatchIngestRequest, IngestionResponse, IngestionStatsResponse
 from app.services.normalizer import DataNormalizer
 from app.services.embedding_service import embedding_service
-from app.db.neo4j_client import neo4j_client
+from app.db.neo4j_client import get_neo4j_client
 from app.db.vector_store import vector_store_client
 from app.db.bm25_index import bm25_index_client
 
@@ -50,7 +50,7 @@ class IngestionService:
                 db_cat.parent_category_id = cat.parent_category_id
             stats_pg["categories"] += 1
             # Neo4j Projection
-            neo4j_client.upsert_category(cat.category_id, cat.name)
+            get_neo4j_client().upsert_category(cat.category_id, cat.name)
 
         db.flush()
 
@@ -94,7 +94,7 @@ class IngestionService:
             stats_pg["standards"] += 1
 
             # Neo4j Standard Node Projection
-            neo4j_client.upsert_standard(
+            get_neo4j_client().upsert_standard(
                 standard_number=norm_number,
                 title=clean_title,
                 status=std.status,
@@ -132,7 +132,7 @@ class IngestionService:
                     stats_pg["cross_references"] += 1
 
                 # Neo4j Edge Projection
-                neo4j_client.upsert_relationship(
+                get_neo4j_client().upsert_relationship(
                     source_number=norm_number,
                     target_number=target_norm,
                     rel_type=xref.relationship_type,
@@ -182,7 +182,7 @@ class IngestionService:
             stats_pg["certification_rules"] += 1
 
             # Neo4j Projection
-            neo4j_client.upsert_certification(
+            get_neo4j_client().upsert_certification(
                 category_id=rule.category_id,
                 standard_number=norm_std,
                 scheme_type=rule.scheme_type
@@ -214,7 +214,7 @@ class IngestionService:
             status="success",
             message=f"Successfully ingested batch with {stats_pg['standards']} standards into Postgres, Neo4j, Vector DB, and BM25.",
             postgres_inserted=stats_pg,
-            neo4j_synced=neo4j_client.connected,
+            neo4j_synced=get_neo4j_client().connected,
             vector_db_indexed_count=vector_count,
             bm25_indexed_count=bm25_count
         )
@@ -228,7 +228,7 @@ class IngestionService:
         logger.info("Starting rebuild of all derived stores from PostgreSQL...")
 
         # Purge derived stores
-        neo4j_client.clear_all()
+        get_neo4j_client().clear_all()
         vector_store_client.clear()
         bm25_index_client.clear()
 
@@ -240,10 +240,10 @@ class IngestionService:
 
         # 1. Repopulate Neo4j
         for cat in categories:
-            neo4j_client.upsert_category(cat.category_id, cat.name)
+            get_neo4j_client().upsert_category(cat.category_id, cat.name)
 
         for std in standards:
-            neo4j_client.upsert_standard(
+            get_neo4j_client().upsert_standard(
                 standard_number=std.standard_number,
                 title=std.title,
                 status=std.status,
@@ -251,7 +251,7 @@ class IngestionService:
             )
 
         for xref in cross_refs:
-            neo4j_client.upsert_relationship(
+            get_neo4j_client().upsert_relationship(
                 source_number=xref.source_standard_number,
                 target_number=xref.target_standard_number,
                 rel_type=xref.relationship_type,
@@ -259,7 +259,7 @@ class IngestionService:
             )
 
         for rule in cert_rules:
-            neo4j_client.upsert_certification(
+            get_neo4j_client().upsert_certification(
                 category_id=rule.category_id,
                 standard_number=rule.standard_number,
                 scheme_type=rule.scheme_type
@@ -307,7 +307,7 @@ class IngestionService:
             "postgres_standards_count": len(standards),
             "vector_db_count": vector_store_client.count(),
             "bm25_count": bm25_index_client.count(),
-            "neo4j_synced": neo4j_client.connected
+            "neo4j_synced": get_neo4j_client().connected
         }
 
     @staticmethod
@@ -325,7 +325,7 @@ class IngestionService:
                 "certification_rules_count": pg_rules,
                 "cross_references_count": pg_xrefs
             },
-            neo4j=neo4j_client.get_stats(),
+            neo4j=get_neo4j_client().get_stats(),
             vector_db={
                 "count": vector_store_client.count(),
                 "collection_name": vector_store_client.collection.name if vector_store_client.collection else ""

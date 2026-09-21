@@ -272,3 +272,74 @@ def _make_id(item: Dict[str, Any]) -> str:
     if item.get("year"):
         bits.append(str(item["year"]))
     return "_".join(bits)
+
+
+_MOJIBAKE_MARKERS = ("Ã", "â€", "Â", "�")
+
+
+def _mojibake_damage(text: str) -> int:
+    return sum(text.count(m) for m in _MOJIBAKE_MARKERS)
+
+
+def repair_mojibake(text: str, max_rounds: int = 3) -> str:
+    """Undo UTF-8 that was decoded as cp1252, possibly more than once.
+
+    Archive titles arrive with damage like "BullÃ¢â‚¬â„¢s Trench" for "Bull's
+    Trench" — UTF-8 bytes read as cp1252, then re-encoded and read as cp1252
+    again. So the repair iterates rather than assuming a single round.
+
+    cp1252, not latin-1: the damaged text contains characters like U+20AC (€)
+    and U+201A (‚) that only exist in the Windows codepage, so a latin-1
+    encode raises and the repair silently does nothing — which is exactly what
+    the first version of this did.
+
+    Each round is kept only if it strictly reduces damage, so legitimate text
+    containing 'Ã' is never mangled by a speculative re-decode.
+    """
+    if not text or not any(m in text for m in _MOJIBAKE_MARKERS):
+        return text
+
+    current = text
+    for _ in range(max_rounds):
+        best = current
+        for encode in (_encode_cp1252_mixed, _encode_strict_cp1252, _encode_latin1):
+            try:
+                candidate = encode(current).decode("utf-8")
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                continue
+            if _mojibake_damage(candidate) < _mojibake_damage(best):
+                best = candidate
+        if best == current:
+            break
+        current = best
+    return current
+
+
+def _encode_strict_cp1252(text: str) -> bytes:
+    return text.encode("cp1252")
+
+
+def _encode_latin1(text: str) -> bytes:
+    return text.encode("latin-1")
+
+
+def _encode_cp1252_mixed(text: str) -> bytes:
+    """Encode cp1252, treating C1 controls as their raw byte.
+
+    The worst damage mixes cp1252-only characters (U+201A, U+20AC) with
+    U+009D, which cp1252 leaves unassigned — so a strict cp1252 encode raises
+    and a latin-1 encode raises on the others. Neither codec can do the whole
+    string, but each character individually is representable, so this encodes
+    per character and falls back to the codepoint for the C1 range.
+    """
+    out = bytearray()
+    for ch in text:
+        try:
+            out += ch.encode("cp1252")
+        except UnicodeEncodeError:
+            code = ord(ch)
+            if 0x80 <= code <= 0x9F:      # C1 control, unassigned in cp1252
+                out.append(code)
+            else:
+                raise
+    return bytes(out)

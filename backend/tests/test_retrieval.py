@@ -114,3 +114,48 @@ def test_model_name_and_size(sample_standards):
     idx = _build(sample_standards)
     assert idx.model_name == "paraphrase-multilingual-MiniLM-L12-v2"
     assert idx.size == len(sample_standards)
+
+
+def test_embedding_cache_round_trip(sample_standards, tmp_path, monkeypatch):
+    """A warm start must reuse embeddings: encoding 6,383 documents takes ~50s
+    and would otherwise be paid on every boot and every test session."""
+    import app.core.retrieval as retrieval
+    monkeypatch.setattr(retrieval, "EMBEDDING_CACHE_DIR", tmp_path)
+
+    cold = retrieval.StandardsIndex(sample_standards)
+    cold.build()
+    assert cold.cache_hit is False
+    assert list(tmp_path.glob("*.npz")), "cold build wrote no cache"
+
+    warm = retrieval.StandardsIndex(sample_standards)
+    warm.build()
+    assert warm.cache_hit is True
+    assert warm.search("structural steel", top_k=3), "warm index must still answer"
+
+
+def test_cache_key_changes_when_corpus_changes(sample_standards, tmp_path, monkeypatch):
+    """Keyed on content, so an edit invalidates it with no manual clear step."""
+    import app.core.retrieval as retrieval
+    monkeypatch.setattr(retrieval, "EMBEDDING_CACHE_DIR", tmp_path)
+
+    retrieval.StandardsIndex(sample_standards).build()
+    edited = [dict(s) for s in sample_standards]
+    edited[0]["scope"] = edited[0]["scope"] + " Additional scope text."
+
+    assert retrieval.StandardsIndex(edited).build() is None
+    assert len(list(tmp_path.glob("*.npz"))) == 2, "edited corpus reused a stale cache"
+
+
+def test_corrupt_cache_does_not_break_startup(sample_standards, tmp_path, monkeypatch):
+    import app.core.retrieval as retrieval
+    monkeypatch.setattr(retrieval, "EMBEDDING_CACHE_DIR", tmp_path)
+
+    idx = retrieval.StandardsIndex(sample_standards)
+    idx.build()
+    for f in tmp_path.glob("*.npz"):
+        f.write_bytes(b"not a real npz file")
+
+    recovered = retrieval.StandardsIndex(sample_standards)
+    recovered.build()
+    assert recovered.cache_hit is False
+    assert recovered.search("structural steel", top_k=2)

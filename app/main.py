@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.db.session import init_db
-from app.db.neo4j_client import neo4j_client
+from app.db.neo4j_client import get_neo4j_client
 from app.api.router import api_router
 
 logging.basicConfig(
@@ -21,13 +21,13 @@ async def lifespan(app: FastAPI):
     init_db()
 
     logger.info("Setting up Neo4j graph constraints and indexes...")
-    neo4j_client.create_constraints()
+    get_neo4j_client().create_constraints()
 
     logger.info("FastAPI application startup complete.")
     yield
     # Shutdown sequence
     logger.info("Shutting down application resources...")
-    neo4j_client.close()
+    get_neo4j_client().close()
 
 app = FastAPI(
     title=settings.APP_NAME,

@@ -65,3 +65,6 @@ qdrant_data/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Embedding cache (regenerated from corpus content hash)
+backend/app/.cache/

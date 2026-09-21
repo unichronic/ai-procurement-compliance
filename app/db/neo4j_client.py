@@ -80,15 +80,40 @@ class Neo4jClient:
                 MERGE (s)-[:BELONGS_TO]->(c)
                 """, number=standard_number, cat_id=category_id)
 
+    # Closed vocabulary of relationship types. Anything not here is refused
+    # rather than escaped, because escaping an identifier into a Cypher string
+    # is not something to get subtly wrong.
+    ALLOWED_REL_TYPES = frozenset({
+        "NORMATIVE_REFERENCE", "TEST_METHOD", "TERMINOLOGY", "SAFETY",
+        "INSTALLATION", "RELATED_PRODUCT", "SUPERSEDES", "SUPERSEDED_BY",
+        "BELONGS_TO", "REQUIRES_CERTIFICATION", "AMENDED_BY", "REFERS_TO",
+    })
+
+    @classmethod
+    def _validate_rel_type(cls, rel_type: str) -> str:
+        normalised = (rel_type or "").strip().upper().replace(" ", "_").replace("-", "_")
+        if normalised not in cls.ALLOWED_REL_TYPES:
+            raise ValueError(
+                f"Refusing unknown relationship type {rel_type!r}. "
+                f"Allowed: {sorted(cls.ALLOWED_REL_TYPES)}"
+            )
+        return normalised
+
     def upsert_relationship(self, source_number: str, target_number: str, rel_type: str, description: Optional[str] = None):
         if not self.connected:
             return
-        # Sanitize rel_type for Cypher query safety
-        safe_rel_type = rel_type.upper().replace(" ", "_").replace("-", "_")
+        # Cypher cannot parameterise a relationship type, so it has to be
+        # interpolated -- which makes an allowlist the only safe option.
+        # Replacing spaces and hyphens (the previous approach) leaves
+        # backticks, braces and newlines intact, so a rel_type sourced from an
+        # ingested document could close the pattern and append arbitrary
+        # Cypher. Relationship types are a closed vocabulary here, so anything
+        # outside it is a bug or an attack and is rejected either way.
+        safe_rel_type = self._validate_rel_type(rel_type)
         query = f"""
         MERGE (src:Standard {{number: $source}})
         MERGE (tgt:Standard {{number: $target}})
-        MERGE (src)-[r:{safe_rel_type}]->(tgt)
+        MERGE (src)-[r:`{safe_rel_type}`]->(tgt)
         SET r.description = $description
         """
         with self.driver.session() as session:
@@ -130,4 +155,17 @@ class Neo4jClient:
         with self.driver.session() as session:
             session.run("MATCH (n) DETACH DELETE n")
 
-neo4j_client = Neo4jClient()
+_client_singleton: Optional["Neo4jClient"] = None
+
+
+def get_neo4j_client() -> "Neo4jClient":
+    """Lazily construct the shared client.
+
+    Previously this module instantiated a client at import time, so merely
+    importing it -- during test collection, or a CLI that never touches the
+    graph -- opened a network connection and paid its timeout.
+    """
+    global _client_singleton
+    if _client_singleton is None:
+        _client_singleton = Neo4jClient()
+    return _client_singleton
