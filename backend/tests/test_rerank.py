@@ -96,6 +96,22 @@ def test_fusion_preserves_first_stage_evidence():
     assert out[0]["standard"]["id"] == "IS_1111"
 
 
+def test_reranker_does_not_promote_superseded_above_active():
+    """The cross-encoder has no notion of a current edition and reads a
+    superseded one as near-identical, so it would happily undo the retriever's
+    demotion. Recommending a superseded standard is the defect this whole
+    project exists to catch."""
+    hits = _hits("1111", "2222")
+    hits[0]["standard"]["status"] = "active"
+    hits[1]["standard"]["status"] = "superseded"
+
+    r = _reranker(["IS 2222"])  # reranker prefers the superseded one
+    out = r.rerank("english query", hits, top_k=2)
+
+    ids = [h["standard"]["id"] for h in out]
+    assert ids.index("IS_1111") < ids.index("IS_2222")
+
+
 def test_rerank_annotates_hits_with_scores():
     r = _reranker(["IS 2222"])
     out = r.rerank("english query", _hits("1111", "2222"), top_k=2)

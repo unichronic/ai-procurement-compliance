@@ -34,6 +34,8 @@ import os
 import re
 from typing import Any, Dict, List, Optional
 
+from app.core.retrieval import SUPERSEDED_PENALTY
+
 DEFAULT_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 # Rerank this many RRF candidates. Beyond the first stage's reach it can't help,
@@ -143,7 +145,14 @@ class CrossEncoderReranker:
         k = RERANK_RRF_K
         for idx, hit in enumerate(candidates):
             hit["rerank_rank"] = rerank_rank[idx] + 1
-            hit["reranked_score"] = 1.0 / (k + idx + 1) + 1.0 / (k + rerank_rank[idx] + 1)
+            score = 1.0 / (k + idx + 1) + 1.0 / (k + rerank_rank[idx] + 1)
+            # The cross-encoder has no notion of whether an edition is current,
+            # and will happily promote a superseded one back above its own
+            # successor -- they read almost identically. Re-applying the
+            # retriever's demotion here keeps that guarantee end to end.
+            if hit["standard"].get("status", "active") != "active":
+                score *= SUPERSEDED_PENALTY
+            hit["reranked_score"] = score
 
         reranked = sorted(candidates, key=lambda h: -h["reranked_score"])
         out = reranked + hits[RERANK_CANDIDATES:]

@@ -30,6 +30,11 @@ _TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 # hit reliably outranks a standard that merely scored well on both soft channels.
 DESIGNATION_WEIGHT = 0.05
 
+# Superseded and withdrawn editions are demoted, not removed: they are still
+# worth surfacing (the linter has to recognise one when a draft cites it), just
+# never ahead of an edition that can actually be cited.
+SUPERSEDED_PENALTY = float(os.environ.get("SUPERSEDED_PENALTY", "0.6"))
+
 # Max-pooling over chunks gives chunk-rich standards more chances at a high
 # score regardless of relevance, and only part of the corpus has ingested full
 # text. Damping makes a chunk match win only when it is clearly better than the
@@ -182,17 +187,24 @@ class StandardsIndex:
             if designation_scores[idx]:
                 rrf[idx] += DESIGNATION_WEIGHT * designation_scores[idx]
 
-        # Tie-break toward editions that can actually be cited. Superseded and
-        # withdrawn editions share a number, title and most of their scope with
-        # the current one, so they score almost identically -- without this the
-        # engine happily returns the outdated edition first, which is the exact
-        # failure mode (citing superseded standards) this project exists to stop.
-        def sort_key(item):
-            idx, score = item
+        # Demote editions that cannot be cited. Superseded and withdrawn
+        # editions share a number, title and most of their scope with the
+        # current one, so they score almost identically -- and returning the
+        # outdated edition first is the exact failure (citing a superseded
+        # standard) this project exists to stop.
+        #
+        # This was originally a tie-break, which only fires on an exact score
+        # match. That held at 39 standards, where the two editions scored
+        # identically, and silently stopped working at 6,383, where slightly
+        # different lexical ranks let the superseded edition win outright. A
+        # penalty is the property actually wanted; a tie-break only approximated
+        # it on a small corpus.
+        for idx in range(len(self.standards)):
             status = self.standards[idx].get("status", "active")
-            return (-score, 0 if status == "active" else 1)
+            if status != "active":
+                rrf[idx] *= SUPERSEDED_PENALTY
 
-        ranked = sorted(rrf.items(), key=sort_key)[:top_k]
+        ranked = sorted(rrf.items(), key=lambda kv: -kv[1])[:top_k]
 
         results = []
         for idx, fused_score in ranked:

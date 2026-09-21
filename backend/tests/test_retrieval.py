@@ -76,7 +76,7 @@ def test_no_designation_hits_reported_when_absent(sample_standards):
     assert hits[0]["designation_hits"] == 0
 
 
-def test_active_edition_outranks_superseded_on_tie(sample_standards):
+def test_active_edition_outranks_superseded(sample_standards):
     """Superseded editions share number/title/scope with the current one and
     score nearly identically -- returning the outdated one first is the exact
     failure this project exists to prevent."""
@@ -84,6 +84,30 @@ def test_active_edition_outranks_superseded_on_tie(sample_standards):
     hits = idx.search("structural steel specification", top_k=5)
     ids = [h["standard"]["id"] for h in hits]
     assert ids.index("IS_2062_2011") < ids.index("IS_2062_2006")
+
+
+def test_superseded_demoted_even_when_it_scores_higher(sample_standards):
+    """Regression: this was a tie-break, which only fires on an exact score
+    match. It held at 39 standards and silently stopped working at 6,383, where
+    slightly different lexical ranks let a superseded edition win outright.
+
+    The superseded fixture is worded to beat the active one on its own terms --
+    the demotion has to hold anyway."""
+    idx = _build(sample_standards)
+    hits = idx.search(
+        "Earlier edition of structural steel specification revised and reissued",
+        top_k=5,
+    )
+    ids = [h["standard"]["id"] for h in hits]
+    assert ids.index("IS_2062_2011") < ids.index("IS_2062_2006")
+
+
+def test_superseded_still_retrievable(sample_standards):
+    """Demoted, not removed -- the linter has to recognise a superseded edition
+    when a draft cites one."""
+    idx = _build(sample_standards)
+    ids = [h["standard"]["id"] for h in idx.search("structural steel", top_k=5)]
+    assert "IS_2062_2006" in ids
 
 
 def test_model_name_and_size(sample_standards):
